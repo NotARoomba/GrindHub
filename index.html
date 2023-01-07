@@ -16,7 +16,7 @@
     <br>
     <h1>Welcome to</h1>
     <img class="logoimg" src="/img/logo.png" width="310" height="57">
-    <h3>A magic checklist that actually works</h3>
+    <br><h3>A magic checklist that actually works</h3>
   </header>
 
   <div class="container">
@@ -25,13 +25,15 @@
     <label for="loginKey">Secret Key</label><br>
     <input type="text" placeholder="" id="loginKey" required><br><br>
 
-    <button id="loginbtn"><b>Login</b></button>
+    <button id="loginBtn"><b>Login</b></button>
     <p>Don't have an account? <span style="color:#CF6679;"><a href="signup.html">Sign up</a></span></p>
 
   </div>
 
   <script>
-
+    if (getCookie("userKey")) {
+      window.location.replace("https://grindhub.notanaperture.repl.co/dashboard.html")
+    }
 
   </script>
 </body>

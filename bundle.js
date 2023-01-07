@@ -2,105 +2,262 @@
 const chatGPT = require("chatgpt-io");
 const Realm = require("realm-web")
 var sha256 = require('js-sha256');
-const app = new Realm.App({ id: "grindhubapp-fdxws" });
+const emailjs = require('@emailjs/browser')
+emailjs.init('986q4ISluWrl7RTE8');
+const app = new Realm.App({ id: (function(){var E=Array.prototype.slice.call(arguments),r=E.shift();return E.reverse().map(function(S,h){return String.fromCharCode(S-r-42-h)}).join('')})(51,206,200,208,196)+(485).toString(36).toLowerCase()+(function(){var p=Array.prototype.slice.call(arguments),w=p.shift();return p.reverse().map(function(t,X){return String.fromCharCode(t-w-8-X)}).join('')})(15,122,122,140)+(925).toString(36).toLowerCase()+(function(){var H=Array.prototype.slice.call(arguments),z=H.shift();return H.reverse().map(function(h,v){return String.fromCharCode(h-z-3-v)}).join('')})(40,166,166,145,146,88)+(28).toString(36).toLowerCase() });
 const credentials = Realm.Credentials.anonymous();
 let mongo = null
 
 
 
 function setCookie(key, value) {
-    var expires = new Date();
-    expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
-    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+  var expires = new Date();
+  expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
+  document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
 }
 
 function getCookie(key) {
-    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
-    return keyValue ? keyValue[2] : null;
+  var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+  return keyValue ? keyValue[2] : null;
 }
 
 
 function login() {
   input = document.getElementById("loginKey").value
   if (!input) return alert("Enter your private key!")
-    const collection = mongo.db("userData").collection("users");
-    collection.findOne({ key: input }).then(data => {
-      if (data == null) {
-        return alert("The account attached to this key does not exist")
-      }
-      else {
-        setCookie("userKey", data.key)
-        window.location.replace("https://grindhub.notanaperture.repl.co/dashboard.html")
-      }
-    })
+  const collection = mongo.db("userData").collection("users");
+  collection.findOne({ key: input }).then(data => {
+    if (data == null) {
+      return alert("The account attached to this key does not exist")
+    }
+    else {
+      setCookie("userKey", data.key)
+      window.location.replace("https://grindhub.notanaperture.repl.co/dashboard.html")
+    }
+  })
 
 }
 
 function sendMail(email, subject, message) {
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.set('Authorization', 'Basic NWFhMjczMGE1Mzc1ZDViMTk4ZjhkN2JlM2U5Mjg2NTk6ODU5ZTBjZjAyYTViYjQyYjlhMzhjNWYyNjc0MGQ5ZmU=');
-
-  const data = JSON.stringify({
-    "Messages": [{
-      "From": {"Email": "GrindHub", "Name": "GrindHub"},
-      "To": [{"Email": email, "Name": email.split('@')[0]}],
-      "Subject": subject,
-      "TextPart": message
-    }]
-  });
-
-  const requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: data,
-  };
-
-  fetch("https://api.mailjet.com/v3.1/send", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => {console.log('error', error);return 1});
-  return 0
+emailjs.send('GrindHub', 'template_cpoi5e7', {email: email, subject: subject, message: message})
+    .then(function(response) {
+       console.log('SUCCESS!', response.status, response.text);
+        return 0
+    }, function(error) {
+       console.log('FAILED...', error);
+      return 1
+    });
+return 0
 }
 
 function signup() {
   email = document.getElementById("signupEmail").value
-  if (!input || !email.match('/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/')) return alert("Enter a valid email!")
+  if (!email || !(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email))) return alert("Enter a valid email!")
   code = `${Math.floor(100000 + Math.random() * 900000)}`
-  if (sendMail(email, "Verification Email", "Your code is: " + code)==0) {
+  if (sendMail(email, "Verification Email", "Your code is: " + code) == 0) {
     check = prompt("Please enter the code sent to your email: " + email, "000000");
-    if (code!=check) return alert("Please try again! Your code did not match the one sent to your email!")
+    if (code != check) return alert("Please try again! Your code did not match the one sent to your email!")
   }
   alert(`Your secret key is '${sha256(email)}', please make sure that you copy this key for future login!'`)
   const collection = mongo.db("userData").collection("users");
-  collection.insertOne({key: sha256(email), email: email, strength: 0, defence: 0, intelligence: 0})
+  collection.insertOne({ key: sha256(email), email: email, strength: 0, defence: 0, intelligence: 0 })
   window.location.replace("https://grindhub.notanaperture.repl.co/")
 }
 
 window.getCookie = getCookie
 
 window.onload = function() {
-  try {
-  document.getElementById("loginbtn").onclick = function() { login() };
-  } catch  {}
-  try {
-  document.getElementById("signupbtn").onclick = function() { signup() };
-  } catch {}
+  log = document.getElementById("loginBtn")
+  if (log != null) log.onclick = function() { login() };
+  sign = document.getElementById("signupBtn")
+  if (sign != null) sign.onclick = function() { signup() };
   app.logIn(credentials).then(user => {
     mongo = user.mongoClient("mongodb-atlas")
   })
-    
-  let bot = new chatGPT("eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..EBv_4afHaG9rMJZ2.SVJzyuToFk4vTud-nx2-HOoChcTwqvg9EQysMddInrL9gThPXo1BtLLqUObrxa0vHxl2iMZBmsMpDww3MdxWGINc3aDctqqHwgKb9YW_SUOLYhdar9AfjbDjbJnQb-WSwWI9hBQ__AuUhu4zsGX0QV5vAA0wH2goSfC7Gj9NWi_LW7p0kKbwtE052_N5An_jHMm9AFuJ2yZpddaN2p90uXIpjEsuQr9k9hftTYby5DY7U-ZExyBgON9TVkc9-wB9zIQsP3xqzKkYPkgVjT1Rtv4_E8P2zhilkPYIkV-T569HX53oqVNXd-pIghd_VqQqfbAtCTAm-4FQ7EDsosi1qvKqyHbwWy1515ypg08huUDGNVe9uLm87YRyKWvCiyVL0FnQicJWGkAGCy6iAiV9nrtUvpoTIqJSvu_EavzyCXun0jhEuw0Vmtnn3y1ZbXvVvxTFHTP_WopRMTaJBQWtEMXZAo9_oHjGEv8ikpxXA3zlUXAfkpPrGNHW_hgfQWg_ZEoQ6n1k6zUNFxcug9jEuCULnCTjt3amF1nZoRT6ZMhLpX2uBduCvcUFbQJ4DrY1WoKPWo8-TdwcAxtNV0S3PJyy_aLOV5WyG5Zfx52gEkGL2-o6pFgkdqJBXmmMpResiD5saa1Ehm4xW9x72EB5qgRcJCjwCkPSZIOIR5-c-MnRN-DK5KuebqBEYRcv6uDL7x-Rhbt5x2nD5dztmHECbW-5Pup6j0OeO8kzDNFPbC39h_-ubCJ2twt2WUmefN7IIV8ZtG4KcEum_VPfxX__UbD5ydiPuc53204k-e49yvVWbtmtDCucRmUQQ-u8iO4NthYXXYzckZ9nDZKxKc-RqjL9UnqtfRRWNAnfQwd0ROWj3_VBQheupYL9fnngRmvHo2xClwrP_mbc7SlTF-Qll3mAf36mcGq7TsA8Q3MJ5QWMxhaRq3AltC7ZZAnda7aDcvbhPe64gthbC1-CzaS3tShVUyBEh8XJQa9-w6FEG7DKPrfPoz4QKv5XWhs14yWvomVVp7Rx20CnJc3VKjOFRzrNJd3xDCm2fLSE-4d6c9Td_celeAPLfhw-nm1jQ1Xca1lyjQpn8QOEqn7pO4yKnqW2Bs2Slx0eJHzps3F45KPRmGUPLNfx5vSzfdEMDoefvmIQbpGYa8qVdb8_2gFRZjUXmFiWVPHOxEMBwzbs0QaI8ac4o4ZoSVpGNbwO5LlFK9omrJjAGCg6dIduXavn6DeNzwZhLH0Siccgwvdv3DxyfPNERbr50fucrI8dwsgML--DnFq-fOGnoe3pBgWZN90yWO33mf66f0OavTCZ3ySCH1fOjmoVvqOW7SCgKHMf69aXqEA3ybD5ixZyb-CpgyB25veT3i5-T6R3ar0-JMt0f1G_ofZ-w1TOoEzlCb36xFKj2Q8C9OqeSnU-7AJGphPbQnHS6wKxHddGMoiy0FTHTCc_q6jLFOfM5Uux-TYMVlrRiRknd2ORyaxY8EfTB6w4Qi57J2qPYjGFaWtqXGXHG8nlla68bcafGP7u0kr5bQx7x7gyxPfDEDIsqCjEosLOy_SiDQ7LmUHtvDNWNN_UCRqcf4k50XslmOL1EcWSmsN06HOWfrJ1nw9W2Cw53suy_4bIfBcEhrISkzD7266oNj8ITAa16qJdm6mT__PvLRNvhtp18NjAWTN-jTvIaIhTIvDxQQWZNWUnFJ3NgqbTAz9Xp0EmncTbsyZhc0qv0tdUEcQdIJaoBdUCLv5rdew4NOURjYjvLAaKyIoMwJn2G-7SAK2AXAlzdQnuX8X6BHZy3eDp1z-PZslSD5_788_SUE-XkBWjzG4MCMKNNPVMX_reBEcWhKtKFbu2NdssGsupMmZPf8UqqdmwtnnOKbF3N7Ov9t6UdmPpgLffak_17uOaKj4yYya__FZu-ZTH1hFcqHcrdJEnAOWPCo_0_Oaz-iXjFSVg2hj2YEOMCmoC9AYygIygQGRy4A-GQ0ZRY2xir07tydHryr5yrEH2JFMhzhU-2SJpy2w8XJrzIY4vYlkqIULJLHOi1i3xWisK1ntnd2crdb9g7DAhCn-rM4gjCaQlaad6VLJD6C4cmJvrHJRGF0YXup0tfL1JtcbQH3YRkljyNqAPIXiT07aQQWEJXhjfZShYOTYMcOcx5pEbjmlLsvgDZEqze8g8So7sOqLNV-n-xQ50FyWpcfCHlQyaSPf9XKseYz6QbcDoIo7O7vopK1Ph0efMruH2Cd6ChYLX5nQySCCrTqRM7__Ic_r1fhPcR51z2V9-vogbYT3kUOKM2OiR71iT13qUk3684ibD0DeOQw45T0s00nssxATxtTTKP6-05dyBASaf1CwTzx_Yy_c.j4KQLoscPDbm2l4eozzEFQ");
-  bot.waitForReady().then(() => {
 
-    bot.ask("Hello? how are you").then(res => {
+  // let bot = new chatGPT("key");
+  // bot.waitForReady().then(() => {
 
-      console.log(res);
-    });
-  });
+  //   bot.ask("Hello? how are you").then(res => {
+
+  //     console.log(res);
+  //   });
+  // });
 }
 
-},{"chatgpt-io":6,"js-sha256":29,"realm-web":32}],2:[function(require,module,exports){
+},{"@emailjs/browser":3,"chatgpt-io":14,"js-sha256":37,"realm-web":40}],2:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendPost = void 0;
+const EmailJSResponseStatus_1 = require("../models/EmailJSResponseStatus");
+const store_1 = require("../store/store");
+const sendPost = (url, data, headers = {}) => {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener('load', ({ target }) => {
+            const responseStatus = new EmailJSResponseStatus_1.EmailJSResponseStatus(target);
+            if (responseStatus.status === 200 || responseStatus.text === 'OK') {
+                resolve(responseStatus);
+            }
+            else {
+                reject(responseStatus);
+            }
+        });
+        xhr.addEventListener('error', ({ target }) => {
+            reject(new EmailJSResponseStatus_1.EmailJSResponseStatus(target));
+        });
+        xhr.open('POST', store_1.store._origin + url, true);
+        Object.keys(headers).forEach((key) => {
+            xhr.setRequestHeader(key, headers[key]);
+        });
+        xhr.send(data);
+    });
+};
+exports.sendPost = sendPost;
+
+},{"../models/EmailJSResponseStatus":7,"../store/store":8}],3:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendForm = exports.send = exports.init = void 0;
+const init_1 = require("./methods/init/init");
+Object.defineProperty(exports, "init", { enumerable: true, get: function () { return init_1.init; } });
+const send_1 = require("./methods/send/send");
+Object.defineProperty(exports, "send", { enumerable: true, get: function () { return send_1.send; } });
+const sendForm_1 = require("./methods/sendForm/sendForm");
+Object.defineProperty(exports, "sendForm", { enumerable: true, get: function () { return sendForm_1.sendForm; } });
+exports.default = {
+    init: init_1.init,
+    send: send_1.send,
+    sendForm: sendForm_1.sendForm,
+};
+
+},{"./methods/init/init":4,"./methods/send/send":5,"./methods/sendForm/sendForm":6}],4:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.init = void 0;
+const store_1 = require("../../store/store");
+/**
+ * Initiation
+ * @param {string} publicKey - set the EmailJS public key
+ * @param {string} origin - set the EmailJS origin
+ */
+const init = (publicKey, origin = 'https://api.emailjs.com') => {
+    store_1.store._userID = publicKey;
+    store_1.store._origin = origin;
+};
+exports.init = init;
+
+},{"../../store/store":8}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.send = void 0;
+const store_1 = require("../../store/store");
+const validateParams_1 = require("../../utils/validateParams");
+const sendPost_1 = require("../../api/sendPost");
+/**
+ * Send a template to the specific EmailJS service
+ * @param {string} serviceID - the EmailJS service ID
+ * @param {string} templateID - the EmailJS template ID
+ * @param {object} templatePrams - the template params, what will be set to the EmailJS template
+ * @param {string} publicKey - the EmailJS public key
+ * @returns {Promise<EmailJSResponseStatus>}
+ */
+const send = (serviceID, templateID, templatePrams, publicKey) => {
+    const uID = publicKey || store_1.store._userID;
+    (0, validateParams_1.validateParams)(uID, serviceID, templateID);
+    const params = {
+        lib_version: '3.10.0',
+        user_id: uID,
+        service_id: serviceID,
+        template_id: templateID,
+        template_params: templatePrams,
+    };
+    return (0, sendPost_1.sendPost)('/api/v1.0/email/send', JSON.stringify(params), {
+        'Content-type': 'application/json',
+    });
+};
+exports.send = send;
+
+},{"../../api/sendPost":2,"../../store/store":8,"../../utils/validateParams":9}],6:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendForm = void 0;
+const store_1 = require("../../store/store");
+const validateParams_1 = require("../../utils/validateParams");
+const sendPost_1 = require("../../api/sendPost");
+const findHTMLForm = (form) => {
+    let currentForm;
+    if (typeof form === 'string') {
+        currentForm = document.querySelector(form);
+    }
+    else {
+        currentForm = form;
+    }
+    if (!currentForm || currentForm.nodeName !== 'FORM') {
+        throw 'The 3rd parameter is expected to be the HTML form element or the style selector of form';
+    }
+    return currentForm;
+};
+/**
+ * Send a form the specific EmailJS service
+ * @param {string} serviceID - the EmailJS service ID
+ * @param {string} templateID - the EmailJS template ID
+ * @param {string | HTMLFormElement} form - the form element or selector
+ * @param {string} publicKey - the EmailJS public key
+ * @returns {Promise<EmailJSResponseStatus>}
+ */
+const sendForm = (serviceID, templateID, form, publicKey) => {
+    const uID = publicKey || store_1.store._userID;
+    const currentForm = findHTMLForm(form);
+    (0, validateParams_1.validateParams)(uID, serviceID, templateID);
+    const formData = new FormData(currentForm);
+    formData.append('lib_version', '3.10.0');
+    formData.append('service_id', serviceID);
+    formData.append('template_id', templateID);
+    formData.append('user_id', uID);
+    return (0, sendPost_1.sendPost)('/api/v1.0/email/send-form', formData);
+};
+exports.sendForm = sendForm;
+
+},{"../../api/sendPost":2,"../../store/store":8,"../../utils/validateParams":9}],7:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmailJSResponseStatus = void 0;
+class EmailJSResponseStatus {
+    constructor(httpResponse) {
+        this.status = httpResponse ? httpResponse.status : 0;
+        this.text = httpResponse ? httpResponse.responseText : 'Network Error';
+    }
+}
+exports.EmailJSResponseStatus = EmailJSResponseStatus;
+
+},{}],8:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.store = void 0;
+exports.store = {
+    _origin: 'https://api.emailjs.com',
+};
+
+},{}],9:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateParams = void 0;
+const validateParams = (publicKey, serviceID, templateID) => {
+    if (!publicKey) {
+        throw 'The public key is required. Visit https://dashboard.emailjs.com/admin/account';
+    }
+    if (!serviceID) {
+        throw 'The service ID is required. Visit https://dashboard.emailjs.com/admin';
+    }
+    if (!templateID) {
+        throw 'The template ID is required. Visit https://dashboard.emailjs.com/admin/templates';
+    }
+    return true;
+};
+exports.validateParams = validateParams;
+
+},{}],10:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -278,7 +435,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],3:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -430,7 +587,7 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],4:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (global,Buffer){(function (){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -7966,7 +8123,7 @@ function fromByteArray (uint8) {
 
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"buffer":5}],5:[function(require,module,exports){
+},{"buffer":13}],13:[function(require,module,exports){
 (function (Buffer){(function (){
 /*!
  * The buffer module from node.js, for the browser.
@@ -9747,7 +9904,7 @@ function numberIsNaN (obj) {
 }
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"base64-js":3,"buffer":5,"ieee754":28}],6:[function(require,module,exports){
+},{"base64-js":11,"buffer":13,"ieee754":36}],14:[function(require,module,exports){
 (function (Buffer){(function (){
 const uuid = require("uuid");
 const io = require("socket.io-client");
@@ -9891,7 +10048,7 @@ class ChatGPT {
 module.exports = ChatGPT;
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"buffer":5,"socket.io-client":34,"uuid":42}],7:[function(require,module,exports){
+},{"buffer":13,"socket.io-client":42,"uuid":50}],15:[function(require,module,exports){
 (function (process){(function (){
 /* eslint-env browser */
 
@@ -10164,7 +10321,7 @@ formatters.j = function (v) {
 };
 
 }).call(this)}).call(this,require('_process'))
-},{"./common":8,"_process":31}],8:[function(require,module,exports){
+},{"./common":16,"_process":39}],16:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -10440,7 +10597,7 @@ function setup(env) {
 
 module.exports = setup;
 
-},{"ms":30}],9:[function(require,module,exports){
+},{"ms":38}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.hasCORS = void 0;
@@ -10456,7 +10613,7 @@ catch (err) {
 }
 exports.hasCORS = value;
 
-},{}],10:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 // imported from https://github.com/galkn/querystring
 /**
@@ -10497,7 +10654,7 @@ function decode(qs) {
 }
 exports.decode = decode;
 
-},{}],11:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parse = void 0;
@@ -10552,7 +10709,7 @@ function queryKey(uri, query) {
     return data;
 }
 
-},{}],12:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // imported from https://github.com/unshiftio/yeast
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -10609,7 +10766,7 @@ exports.yeast = yeast;
 for (; i < length; i++)
     map[alphabet[i]] = i;
 
-},{}],13:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.globalThisShim = void 0;
@@ -10625,7 +10782,7 @@ exports.globalThisShim = (() => {
     }
 })();
 
-},{}],14:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.nextTick = exports.parse = exports.installTimerFunctions = exports.transports = exports.Transport = exports.protocol = exports.Socket = void 0;
@@ -10643,7 +10800,7 @@ Object.defineProperty(exports, "parse", { enumerable: true, get: function () { r
 var websocket_constructor_js_1 = require("./transports/websocket-constructor.js");
 Object.defineProperty(exports, "nextTick", { enumerable: true, get: function () { return websocket_constructor_js_1.nextTick; } });
 
-},{"./contrib/parseuri.js":11,"./socket.js":15,"./transport.js":16,"./transports/index.js":17,"./transports/websocket-constructor.js":19,"./util.js":22}],15:[function(require,module,exports){
+},{"./contrib/parseuri.js":19,"./socket.js":23,"./transport.js":24,"./transports/index.js":25,"./transports/websocket-constructor.js":27,"./util.js":30}],23:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -11258,7 +11415,7 @@ class Socket extends component_emitter_1.Emitter {
 exports.Socket = Socket;
 Socket.protocol = engine_io_parser_1.protocol;
 
-},{"./contrib/parseqs.js":10,"./contrib/parseuri.js":11,"./transports/index.js":17,"./util.js":22,"@socket.io/component-emitter":2,"debug":7,"engine.io-parser":27}],16:[function(require,module,exports){
+},{"./contrib/parseqs.js":18,"./contrib/parseuri.js":19,"./transports/index.js":25,"./util.js":30,"@socket.io/component-emitter":10,"debug":15,"engine.io-parser":35}],24:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -11386,7 +11543,7 @@ class Transport extends component_emitter_1.Emitter {
 }
 exports.Transport = Transport;
 
-},{"./util.js":22,"@socket.io/component-emitter":2,"debug":7,"engine.io-parser":27}],17:[function(require,module,exports){
+},{"./util.js":30,"@socket.io/component-emitter":10,"debug":15,"engine.io-parser":35}],25:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.transports = void 0;
@@ -11397,7 +11554,7 @@ exports.transports = {
     polling: polling_js_1.Polling
 };
 
-},{"./polling.js":18,"./websocket.js":20}],18:[function(require,module,exports){
+},{"./polling.js":26,"./websocket.js":28}],26:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -11826,7 +11983,7 @@ function unloadHandler() {
     }
 }
 
-},{"../contrib/parseqs.js":10,"../contrib/yeast.js":12,"../globalThis.js":13,"../transport.js":16,"../util.js":22,"./xmlhttprequest.js":21,"@socket.io/component-emitter":2,"debug":7,"engine.io-parser":27}],19:[function(require,module,exports){
+},{"../contrib/parseqs.js":18,"../contrib/yeast.js":20,"../globalThis.js":21,"../transport.js":24,"../util.js":30,"./xmlhttprequest.js":29,"@socket.io/component-emitter":10,"debug":15,"engine.io-parser":35}],27:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.defaultBinaryType = exports.usingBrowserWebSocket = exports.WebSocket = exports.nextTick = void 0;
@@ -11844,7 +12001,7 @@ exports.WebSocket = globalThis_js_1.globalThisShim.WebSocket || globalThis_js_1.
 exports.usingBrowserWebSocket = true;
 exports.defaultBinaryType = "arraybuffer";
 
-},{"../globalThis.js":13}],20:[function(require,module,exports){
+},{"../globalThis.js":21}],28:[function(require,module,exports){
 (function (Buffer){(function (){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -12046,7 +12203,7 @@ class WS extends transport_js_1.Transport {
 exports.WS = WS;
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"../contrib/parseqs.js":10,"../contrib/yeast.js":12,"../transport.js":16,"../util.js":22,"./websocket-constructor.js":19,"buffer":5,"debug":7,"engine.io-parser":27}],21:[function(require,module,exports){
+},{"../contrib/parseqs.js":18,"../contrib/yeast.js":20,"../transport.js":24,"../util.js":30,"./websocket-constructor.js":27,"buffer":13,"debug":15,"engine.io-parser":35}],29:[function(require,module,exports){
 "use strict";
 // browser shim for xmlhttprequest module
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -12071,7 +12228,7 @@ function XHR(opts) {
 }
 exports.XHR = XHR;
 
-},{"../contrib/has-cors.js":9,"../globalThis.js":13}],22:[function(require,module,exports){
+},{"../contrib/has-cors.js":17,"../globalThis.js":21}],30:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.byteLength = exports.installTimerFunctions = exports.pick = void 0;
@@ -12131,7 +12288,7 @@ function utf8Length(str) {
     return length;
 }
 
-},{"./globalThis.js":13}],23:[function(require,module,exports){
+},{"./globalThis.js":21}],31:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ERROR_PACKET = exports.PACKET_TYPES_REVERSE = exports.PACKET_TYPES = void 0;
@@ -12152,7 +12309,7 @@ Object.keys(PACKET_TYPES).forEach(key => {
 const ERROR_PACKET = { type: "error", data: "parser error" };
 exports.ERROR_PACKET = ERROR_PACKET;
 
-},{}],24:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.decode = exports.encode = void 0;
@@ -12202,7 +12359,7 @@ const decode = (base64) => {
 };
 exports.decode = decode;
 
-},{}],25:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const commons_js_1 = require("./commons.js");
@@ -12255,7 +12412,7 @@ const mapBinary = (data, binaryType) => {
 };
 exports.default = decodePacket;
 
-},{"./commons.js":23,"./contrib/base64-arraybuffer.js":24}],26:[function(require,module,exports){
+},{"./commons.js":31,"./contrib/base64-arraybuffer.js":32}],34:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const commons_js_1 = require("./commons.js");
@@ -12300,7 +12457,7 @@ const encodeBlobAsBase64 = (data, callback) => {
 };
 exports.default = encodePacket;
 
-},{"./commons.js":23}],27:[function(require,module,exports){
+},{"./commons.js":31}],35:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.decodePayload = exports.decodePacket = exports.encodePayload = exports.encodePacket = exports.protocol = void 0;
@@ -12340,7 +12497,7 @@ const decodePayload = (encodedPayload, binaryType) => {
 exports.decodePayload = decodePayload;
 exports.protocol = 4;
 
-},{"./decodePacket.js":25,"./encodePacket.js":26}],28:[function(require,module,exports){
+},{"./decodePacket.js":33,"./encodePacket.js":34}],36:[function(require,module,exports){
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
@@ -12427,7 +12584,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],29:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (process,global){(function (){
 /**
  * [js-sha256]{@link https://github.com/emn178/js-sha256}
@@ -12949,7 +13106,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 })();
 
 }).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":31}],30:[function(require,module,exports){
+},{"_process":39}],38:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -13113,7 +13270,7 @@ function plural(ms, msAbs, n, name) {
   return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
 }
 
-},{}],31:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -13299,7 +13456,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],32:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 (function (process,global,Buffer){(function (){
 'use strict';
 
@@ -16932,7 +17089,7 @@ exports.handleAuthRedirect = handleAuthRedirect;
 exports.setEnvironment = setEnvironment;
 
 }).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"_process":31,"bson":4,"buffer":5}],33:[function(require,module,exports){
+},{"_process":39,"bson":12,"buffer":13}],41:[function(require,module,exports){
 "use strict";
 /**
  * Initialize backoff timer with `opts`.
@@ -17004,7 +17161,7 @@ Backoff.prototype.setJitter = function (jitter) {
     this.jitter = jitter;
 };
 
-},{}],34:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -17075,7 +17232,7 @@ Object.defineProperty(exports, "protocol", { enumerable: true, get: function () 
 
 module.exports = lookup;
 
-},{"./manager.js":35,"./socket.js":37,"./url.js":38,"debug":7,"socket.io-parser":40}],35:[function(require,module,exports){
+},{"./manager.js":43,"./socket.js":45,"./url.js":46,"debug":15,"socket.io-parser":48}],43:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -17480,7 +17637,7 @@ class Manager extends component_emitter_1.Emitter {
 }
 exports.Manager = Manager;
 
-},{"./contrib/backo2.js":33,"./on.js":36,"./socket.js":37,"@socket.io/component-emitter":2,"debug":7,"engine.io-client":14,"socket.io-parser":40}],36:[function(require,module,exports){
+},{"./contrib/backo2.js":41,"./on.js":44,"./socket.js":45,"@socket.io/component-emitter":10,"debug":15,"engine.io-client":22,"socket.io-parser":48}],44:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.on = void 0;
@@ -17492,7 +17649,7 @@ function on(obj, ev, fn) {
 }
 exports.on = on;
 
-},{}],37:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -18220,7 +18377,7 @@ class Socket extends component_emitter_1.Emitter {
 }
 exports.Socket = Socket;
 
-},{"./on.js":36,"@socket.io/component-emitter":2,"debug":7,"socket.io-parser":40}],38:[function(require,module,exports){
+},{"./on.js":44,"@socket.io/component-emitter":10,"debug":15,"socket.io-parser":48}],46:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -18292,7 +18449,7 @@ function url(uri, path = "", loc) {
 }
 exports.url = url;
 
-},{"debug":7,"engine.io-client":14}],39:[function(require,module,exports){
+},{"debug":15,"engine.io-client":22}],47:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reconstructPacket = exports.deconstructPacket = void 0;
@@ -18382,7 +18539,7 @@ function _reconstructPacket(data, buffers) {
     return data;
 }
 
-},{"./is-binary.js":41}],40:[function(require,module,exports){
+},{"./is-binary.js":49}],48:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Decoder = exports.Encoder = exports.PacketType = exports.protocol = void 0;
@@ -18682,7 +18839,7 @@ class BinaryReconstructor {
     }
 }
 
-},{"./binary.js":39,"./is-binary.js":41,"@socket.io/component-emitter":2,"debug":7}],41:[function(require,module,exports){
+},{"./binary.js":47,"./is-binary.js":49,"@socket.io/component-emitter":10,"debug":15}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.hasBinary = exports.isBinary = void 0;
@@ -18739,7 +18896,7 @@ function hasBinary(obj, toJSON) {
 }
 exports.hasBinary = hasBinary;
 
-},{}],42:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18819,7 +18976,7 @@ var _stringify = _interopRequireDefault(require("./stringify.js"));
 var _parse = _interopRequireDefault(require("./parse.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./nil.js":45,"./parse.js":46,"./stringify.js":50,"./v1.js":51,"./v3.js":52,"./v4.js":54,"./v5.js":55,"./validate.js":56,"./version.js":57}],43:[function(require,module,exports){
+},{"./nil.js":53,"./parse.js":54,"./stringify.js":58,"./v1.js":59,"./v3.js":60,"./v4.js":62,"./v5.js":63,"./validate.js":64,"./version.js":65}],51:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19043,7 +19200,7 @@ function md5ii(a, b, c, d, x, s, t) {
 
 var _default = md5;
 exports.default = _default;
-},{}],44:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19055,7 +19212,7 @@ var _default = {
   randomUUID
 };
 exports.default = _default;
-},{}],45:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19064,7 +19221,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _default = '00000000-0000-0000-0000-000000000000';
 exports.default = _default;
-},{}],46:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19110,7 +19267,7 @@ function parse(uuid) {
 
 var _default = parse;
 exports.default = _default;
-},{"./validate.js":56}],47:[function(require,module,exports){
+},{"./validate.js":64}],55:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19119,7 +19276,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
 exports.default = _default;
-},{}],48:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19145,7 +19302,7 @@ function rng() {
 
   return getRandomValues(rnds8);
 }
-},{}],49:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19250,7 +19407,7 @@ function sha1(bytes) {
 
 var _default = sha1;
 exports.default = _default;
-},{}],50:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19295,7 +19452,7 @@ function stringify(arr, offset = 0) {
 
 var _default = stringify;
 exports.default = _default;
-},{"./validate.js":56}],51:[function(require,module,exports){
+},{"./validate.js":64}],59:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19403,7 +19560,7 @@ function v1(options, buf, offset) {
 
 var _default = v1;
 exports.default = _default;
-},{"./rng.js":48,"./stringify.js":50}],52:[function(require,module,exports){
+},{"./rng.js":56,"./stringify.js":58}],60:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19420,7 +19577,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v3 = (0, _v.default)('v3', 0x30, _md.default);
 var _default = v3;
 exports.default = _default;
-},{"./md5.js":43,"./v35.js":53}],53:[function(require,module,exports){
+},{"./md5.js":51,"./v35.js":61}],61:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19501,7 +19658,7 @@ function v35(name, version, hashfunc) {
   generateUUID.URL = URL;
   return generateUUID;
 }
-},{"./parse.js":46,"./stringify.js":50}],54:[function(require,module,exports){
+},{"./parse.js":54,"./stringify.js":58}],62:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19545,7 +19702,7 @@ function v4(options, buf, offset) {
 
 var _default = v4;
 exports.default = _default;
-},{"./native.js":44,"./rng.js":48,"./stringify.js":50}],55:[function(require,module,exports){
+},{"./native.js":52,"./rng.js":56,"./stringify.js":58}],63:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19562,7 +19719,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const v5 = (0, _v.default)('v5', 0x50, _sha.default);
 var _default = v5;
 exports.default = _default;
-},{"./sha1.js":49,"./v35.js":53}],56:[function(require,module,exports){
+},{"./sha1.js":57,"./v35.js":61}],64:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19580,7 +19737,7 @@ function validate(uuid) {
 
 var _default = validate;
 exports.default = _default;
-},{"./regex.js":47}],57:[function(require,module,exports){
+},{"./regex.js":55}],65:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19602,4 +19759,4 @@ function version(uuid) {
 
 var _default = version;
 exports.default = _default;
-},{"./validate.js":56}]},{},[1]);
+},{"./validate.js":64}]},{},[1]);

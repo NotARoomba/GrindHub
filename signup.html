@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width">
   <title>GrindHub</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="./bundle.js"></script>
 </head>
 
@@ -26,13 +27,15 @@
     <input type="text" placeholder="" id="signupEmail" required><br><br>
 
 
-    <button id="signupbtn"><b>Sign Up</b></button>
+    <button id="signupBtn"><b>Sign Up</b></button>
     <p>Already have an account? <span style="color:#CF6679;"><a href="index.html">Log In</a></span></p>
 
   </div>
 
   <script>
-
+    if (getCookie("userKey")) {
+      window.location.replace("https://grindhub.notanaperture.repl.co/dashboard.html")
+    }
 
   </script>
 </body>

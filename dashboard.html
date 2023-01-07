@@ -8,12 +8,13 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script src="./bundle.js"></script>
 </head>
-
+<body>
 <main>
-  <header>
+
+<header>
     <h2>My Dashboard</h2>
   </header>
-
+  
   <div class="row">
     <div class="column">
       <h4>Daily Missions</h4>
@@ -29,8 +30,8 @@
               <p class="description">Take at least 3 gallons of water during the day</p>
             </div>
             <div class="column3">
-              <p class="stat">+15 def &#128737</p>
-              <p class="stat">+2 strength &#128170</p>
+              <p class="defense" value="15">+15 def &#128737</p>
+              <p class="strength" value="2">+2 strength &#128170</p>
             </div>
           </div>
         </div>
@@ -39,6 +40,40 @@
     </div>
     <div class="column">
       <h4>My Stats</h4>
+      
+      <div class="profile">
+        <h5 class="user" style="font-size: 30px;"><b>User</b></h5>
+        <img class="profile-pic" src="img/puss_profile.jpeg">
+      </div>
+      
+      <div class="level">
+        <h5>Level 2</h5>
+        <div class="level-bar"></div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="strength">
+          <div class="details">
+          <p>Strength</p>
+          <p>45 XP</p>
+          </div>
+          <div class="bar">
+            <div id="jQuery-bar"></div>
+          </div>
+          
+        </div>
+        <div class="defense">
+          <p>Defense</p>
+        </div>
+        <div class="intelligence">
+          <p>Intelligence</p>
+        </div>
+        <div class="overall">
+          <p>Overall Stats</p>
+        </div>
+        
+      </div>
+      
     </div>
   </div>
 
@@ -52,5 +87,6 @@
 
   </script>
 </main>
+  </body>
 
 </html>
