@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css?family=Manrope&display=swap');
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: calc(max(100vh, 400px));
+  padding: 5px;
+  font-family: "Manrope", sans-serif;
+  background: #121212
+}
+
+palette{
+
+  PRIMARY: #BB86FC;
+  PRIMARYVARIANT: #3700B3;
+  SECONDARY: #03DAC6;
+  BG: #121212;
+  ERROR: #CF6679;
+}
+
+h1{
+  color:#BB86FC;
+  font-size: 60px;
+  margin: 0;
+}
+
+h2{
+  color:#3700B3;
+  font-size: 50px;
+}
+
+h3{
+  color:#3700B3; 
+  font-size: 30px
+}
+
+h4{
+  color:#BB86FC;
+  font-size: 40px;
+  margin:0;
+  padding:0;
+}
+
+p{
+  color:white;
+}
+
+a{
+  color:#CF6679;
+  text-decoration: none;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  vertical-align: center;
+  justify-content: center;
+  text-align: center;
+}
+
+label{
+  color:white;
+  margin: 5px;
+}
+
+input[type=text], input[type=password] {
+  margin: 10px;
+  border-radius: 15px;
+  height: 10%;
+  border:none;
+  padding: 5px;
+  width: 15%;
+}
+
+#loginbtn{
+  border:none;
+  border-radius: 10px;
+  padding: 5px;
+  font-size: 15px;
+  width: 10%;
+  background-color:#BB86FC;
+  color:#3700B3;
+  font-family: "Manrope", sans-serif;
+}
+
+#loginbtn:hover{
+  transition: 0.6s;
+  background-color:#3700B3;
+  color:#BB86FC;
+  font-family: "Manrope", sans-serif;
+}
+
+#signupbtn{
+  border:none;
+  border-radius: 10px;
+  padding: 5px;
+  font-size: 15px;
+  width: 20%;
+  background-color:#BB86FC;
+  color:#3700B3;
+  font-family: "Manrope", sans-serif;
+}
+
+#signupbtn:hover{
+  transition: 0.6s;
+  background-color:#3700B3;
+  color:#BB86FC;
+  font-family: "Manrope", sans-serif;
+}
+
+header{
+  margin:0
+}
+main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+  justify-content: center;
+  align-items: center;
+}
+
+.mission-board{
+  display: flex;
+  margin: 20px;
+  margin-left: 80px;
+  width: 600px;
+  background-color: #BB86FC;
+  border-radius: 15px;
+  justify-content: center;
+}
+
+.mission{
+  background-color: #3700B3;
+  margin: 10px;
+  border-radius: 10px;
+  width: 90%;
+}
+.emoji{
+  font-size: 60px;
+  align-self: center;
+  display: flex;
+  
+}
+
+.column1 {
+  flex: 15%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  
+}
+
+.column2 {
+  flex: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.column3 {
+  flex: 35%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.title{
+  color:white;
+  margin: 0;
+  font-size: 20px;
+  text-align: left;
+}
+
+.description{
+  color:#BB86FC;
+  margin: 0;
+  font-size: 15px;
+  text-align: left;
+}

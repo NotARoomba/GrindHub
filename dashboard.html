@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>GrindHub</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <script src="./bundle.js"></script>
+</head>
+
+<main>
+  <header>
+    <h2>My Dashboard</h2>
+  </header>
+
+  <div class="row">
+    <div class="column">
+      <h4>Daily Missions</h4>
+      <div class="mission-board">
+
+        <div class="mission">
+          <div class="row">
+            <div class="column1">
+              <span class="emoji">&#129380</span>
+            </div>
+            <div class="column2">
+              <p class="title"><b>Drink Water</b></p>
+              <p class="description">Take at least 3 gallons of water during the day</p>
+            </div>
+            <div class="column3">
+              <p class="stat">+15 def &#128737</p>
+              <p class="stat">+2 strength &#128170</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="column">
+      <h4>My Stats</h4>
+    </div>
+  </div>
+
+
+  <script>
+    window.onload = function () {
+      if (!getCookie("userKey")) {
+        window.location.replace("https://grindhub.notanaperture.repl.co/")
+      }
+    }
+
+  </script>
+</main>
+
+</html>
