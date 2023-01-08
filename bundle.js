@@ -184,12 +184,13 @@ async function updateMissions(beenClicked) {
     intelligence: "🧠",
   };
   if (!user.hasRefreshed) {
+
     const missionBoard = document.querySelector(".mission-board");
     missionBoard.innerHTML = "";
     for (const mission of missions) {
-     if (user.completed.find(m => m.description== mission.description)) if (user.completed.find(m => m == mission)) continue;
+      if (user.completed.find(m => m.description == mission.description)) continue;
       category = categories[Math.floor(Math.random() * categories.length)]
-      if (missions.indexOf(mission) % 2 == 0) {
+      if (missions.indexOf(mission) % 2 != 0) {
         const div = document.createElement("div");
         div.className = "mission";
 
@@ -254,7 +255,7 @@ async function updateMissions(beenClicked) {
     const missionBoard = document.querySelector(".mission-board");
     missionBoard.innerHTML = "";
     for (const mission of missions) {
-      if (user.completed.find(m => m.description== mission.description)) continue;
+      if (user.completed.find(m => m.description == mission.description)) continue;
       category = categories[Math.floor(Math.random() * categories.length)]
       if (missions.indexOf(mission) % 2 != 0) {
         const div = document.createElement("div");
@@ -319,15 +320,15 @@ async function updateMissions(beenClicked) {
   };
   const missionBoard = document.querySelector(".mission-board");
   if (missionBoard.innerHTML == "") {
-  const div = document.createElement("div");
-        div.className = "missionDoneDiv";
-  const title = document.createElement("p");
-        title.id = "missionsDone";
-        title.className = "missionsFinishTitle";
-        title.innerHTML = `<b id="missionsDoneText">The missions for today have been completed!</b> <br><br>
+    const div = document.createElement("div");
+    div.className = "missionDoneDiv";
+    const title = document.createElement("p");
+    title.id = "missionsDone";
+    title.className = "missionsFinishTitle";
+    title.innerHTML = `<b id="missionsDoneText">The missions for today have been completed!</b> <br><br>
         <img class="congrats" src="img/gato.jpeg">`;
-        div.appendChild(title);
-  missionBoard.appendChild(div)
+    div.appendChild(title);
+    missionBoard.appendChild(div)
   }
 }
 
@@ -355,7 +356,7 @@ function findStatXpPerc(totalXP, next) {
     totalXP -= levelTotalXp
     levelTotalXp += next
   }
-  return [totalXP == 0 ? 0 : Math.round((totalXP / levelTotalXp)*100), level, totalXP, levelTotalXp]
+  return [totalXP == 0 ? 0 : Math.round((totalXP / levelTotalXp) * 100), level, totalXP, levelTotalXp]
 };
 
 
@@ -394,13 +395,13 @@ async function changeXPandRank() {
   level = overall[1]
   rankImg = document.getElementById('rankImg')
   rank = document.getElementById('rank')
-  if (level < 10) { rank.innerHTML = "Rank: Rookie Grinder I"; rankImg.src = 'img/RookieGrinderI.png'}
-  else if (level < 20 && level > 9) {rank.innerHTML = "Rank: Rookie Grinder II"; rankImg.src = 'img/RookieGrinderII.png'}
-  else if (level < 30 && level > 19) {rank.innerHTML = "Rank: Veteran Grinder I"; rankImg.src = 'img/VeteranGrinderI.png'}
-  else if (level < 40 && level > 29) {rank.innerHTML = "Rank: Veteran Grinder II"; rankImg.src = 'img/VeteranGrinderII.png'}
-  else if (level < 50 && level > 39) {rank.innerHTML = "Rank: Elite Grinder I"; rankImg.src = 'img/EliteGrinderI.png'}
-  else if (level < 60 && level > 49) {rank.innerHTML = "Rank: Elite Grinder II"; rankImg.src = 'img/EliteGrinderII.png'}
-  else if (level < 70 && level > 59) {rank.innerHTML = "Rank: Master Grinder I"; rankImg.src = 'img/MasterGrinderI.png'}
+  if (level < 10) { rank.innerHTML = "Rank: Rookie Grinder I"; rankImg.src = 'img/RookieGrinderI.png' }
+  else if (level < 20 && level > 9) { rank.innerHTML = "Rank: Rookie Grinder II"; rankImg.src = 'img/RookieGrinderII.png' }
+  else if (level < 30 && level > 19) { rank.innerHTML = "Rank: Veteran Grinder I"; rankImg.src = 'img/VeteranGrinderI.png' }
+  else if (level < 40 && level > 29) { rank.innerHTML = "Rank: Veteran Grinder II"; rankImg.src = 'img/VeteranGrinderII.png' }
+  else if (level < 50 && level > 39) { rank.innerHTML = "Rank: Elite Grinder I"; rankImg.src = 'img/EliteGrinderI.png' }
+  else if (level < 60 && level > 49) { rank.innerHTML = "Rank: Elite Grinder II"; rankImg.src = 'img/EliteGrinderII.png' }
+  else if (level < 70 && level > 59) { rank.innerHTML = "Rank: Master Grinder I"; rankImg.src = 'img/MasterGrinderI.png' }
   else rank.innerHTML = "Rank: Passerby"
 
 };
@@ -415,8 +416,8 @@ async function missionComplete() {
       let data = missionCheckboxes[i].missionData
       final = {}
       final[data[0].category] = data[0].upgrade
-      final[data[1]] = Math.floor(data[0].upgrade/2)
-      await collection.updateOne({ key: getCookie('userKey') }, { $inc: final, $push: {completed: data[0]}  })
+      final[data[1]] = Math.floor(data[0].upgrade / 2)
+      await collection.updateOne({ key: getCookie('userKey') }, { $inc: final, $push: { completed: data[0] } })
       await updateProfile()
     }
   }
