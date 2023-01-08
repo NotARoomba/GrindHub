@@ -18,14 +18,98 @@
       <div id="logoutBtn" class="logout-icon">
         &#128682
       </div>
+      <div id="guideBtn" class="guide-icon" onclick="openPop()">
+        &#10068
+      </div>
+
+      <div class="pop-out" id="pop-out">
+        <h4 class="works"><b>How does it work</b></h4>
+        <p id="closePop" onclick="closePop()">X</p>
+        <div>
+          <row>
+            <column1-1>
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Rookie Grinder I</h4>
+                  <p class="mPar">Level 1-9</p>
+                </div>
+              </div>
+
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Rookie Grinder II</h4>
+                  <p class="mPar">Level 10-19</p>
+                </div>
+              </div>
+
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Veteran Grinder I</h4>
+                  <p class="mPar">Level 20-29</p>
+                </div>
+              </div>
+
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Veteran Grinder II</h4>
+                  <p class="mPar">Level 30-39</p>
+                </div>
+              </div>
+              
+            </column>
+            
+            <column1-2>
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Elite Grinder I</h4>
+                  <p class="mPar">Level 40-49</p>
+                </div>
+              </div>
+
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Elite Grinder II</h4>
+                  <p class="mPar">Level 50-59</p>
+                </div>
+              </div>
+
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Master Grinder</h4>
+                  <p class="mPar">Level 60-69</p>
+                </div>
+              </div>
+
+              <div class="medal">
+                <img class="medal-img">
+                <div class="mText">
+                  <h4 class="mTitle">Sigma Grinder</h4>
+                  <p class="mPar">Level 999</p>
+                </div>
+              </div>
+              
+            </column>
+          </row>
+        </div>
+      </div>
+
+
     </header>
     <div class="row">
       <div class="column">
         <div class="container2">
-        <h4>Daily Missions</h4>
-        <span class="emoji" id="refresh" onclick="changeXP()">&#128260</span></div>
+          <h4>Daily Missions</h4>
+          <span class="emoji" id="refresh" onclick="changeXP()">&#128260</span>
+        </div>
 
-        
+
 
         <div class="mission-board">
 
@@ -34,7 +118,7 @@
             <label id=>
               <div class="row">
                 <div class="column1">
-                  <span class="emoji">&#129380</span>
+                  <input class="checkbox" type="checkbox" id="cbox1" value="mission1" onclick="confettiCheck()">
                 </div>
                 <div class="column2">
                   <p id="title" class="title"><b>Drink Water</b></p>
@@ -45,13 +129,13 @@
                   <p class="strength" value="2">+2 strength &#128170</p>
                 </div>
                 <div class="column4">
-                  <input class="checkbox" type="checkbox" id="cbox1" value="mission1" onclick="confettiCheck()">
+                  <span class="emoji">&#129380</span>
                 </div>
               </div>
             </label>
           </div>
 
-          <div class="mission" id="mission">
+          <!-- <div class="mission" id="mission">
             <label>
               <div class="row">
                 <div class="column1">
@@ -133,7 +217,7 @@
                 </div>
               </div>
             </label>
-          </div>
+          </div>-->
 
 
 
@@ -162,6 +246,8 @@
             <div id="chg-username" class="edit-pencil">&#9999</div>
           </div>
 
+          <p class="rank" id="rank"><b>Rank Name</b></p>
+
 
           <div class="level">
             <h5 class="ltitle">Level <span id="levelNumber"></span></h5>
@@ -171,7 +257,7 @@
             <div class="strength">
               <div class="details">
                 <p>Strength</p>
-                <p>45 XP</p>
+                <p id="numStre">0 XP</p>
               </div>
               <div class="bar">
                 <div id="strength-bar"></div>
@@ -182,7 +268,7 @@
             <div class="defense">
               <div class="details">
                 <p>Defense</p>
-                <p>34 XP</p>
+                <p id="numDef">0 XP</p>
               </div>
               <div class="bar">
                 <div id="defense-bar"></div>
@@ -192,7 +278,7 @@
             <div class="intelligence">
               <div class="details">
                 <p>Intelligence</p>
-                <p>25 XP</p>
+                <p id="numInt">0 XP</p>
               </div>
               <div class="bar">
                 <div id="intelligence-bar"></div>
@@ -202,7 +288,7 @@
             <div class="overall">
               <div class="details">
                 <p>Overall Stats</p>
-                <p>425 XP</p>
+                <p id="numOver">0 XP</p>
               </div>
               <div class="bar">
                 <div id="overall-bar"></div>
@@ -224,6 +310,16 @@
     </script>
 
     <script>
+
+      function closePop() {
+        pop = document.getElementById('pop-out')
+        pop.style.visibility = 'hidden'
+      };
+
+      function openPop() {
+        pop = document.getElementById('pop-out')
+        pop.style.visibility = 'visible'
+      };
 
       // for starting the confetti 
       const start = () => {

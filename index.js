@@ -1,6 +1,4 @@
-const chatGPT = require("chatgpt-io");
-const { ChatGPTClient } = require('unofficial-chatgpt-api');
-//const chatGPT = require('chatgpt')
+const chatGPT = require('chatgpt-io')
 const Realm = require("realm-web")
 var sha256 = require('js-sha256');
 const emailjs = require('@emailjs/browser')
@@ -67,7 +65,7 @@ async function signup() {
       else break;
     }
     alert(`Your secret key is '${sha256(email)}', please make sure that you copy this key for future login!'`)
-    await collection.insertOne({ key: sha256(email), email: email, name: name, image: null, strength: 0, defence: 0, intelligence: 0 })
+    await collection.insertOne({ key: sha256(email), email: email, name: name, image: null, strength: 0, defence: 0, intelligence: 0, hasRefreshed: false })
     window.location.replace("https://grindhub.notanaperture.repl.co/")
   } catch (e) {
     console.log(e)
@@ -80,6 +78,9 @@ async function updateProfile() {
   user = await collection.findOne({ key: getCookie('userKey') })
   document.getElementById('username').textContent = (user.name == null ? user.email : user.name)
   document.getElementById('userPfp').src = (user.image == null ? './img/default.jpeg' : user.image)
+  await changeXP()
+  await changeRank()
+  await updateMissions()
 
 }
 
@@ -128,30 +129,95 @@ async function getMissions() {
   if (last.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
     // let bot = new chatGPT("no");
-    // await bot.waitForReady()
+    //await bot.waitForReady()
+    let bot = new chatGPT('eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..w_fQDzh7MIALWYn7.gfm3V8hQExsnrXXy8giwV_RKHUecRcL35QlyQCGNvnyAw--h1CwlCPtBnn4FCwBFjV2FKoK7p6sqKqVVHmH6dkjaY7yyeXEd1K4s5xO4p-yqKD-WwpOr7f0V-wy5f8HHF-NhwLWIpPyN3NMBZkREvYKi7kVDYradk8EnNbG2mx5Y62VXoo_ekoRQd2q-Uq9GyCEY49pkxYf9hBXk7g2z7XEBfEJhYMbUBP0fGLtxfykaHPb0Q3v6PkP2hRCBWBpRtbA8yg8P2LTujI92s13Y_xtaRHN8rjEBlFq6Zcf9ppFqu5_Zeqd5TWlEjYF-6Uta1MjZVEAm6obDVTrom68UIKT_ruuJtBrNxehbE9AV9HfGQRjMRyblTFfPeh_SVlqHJKQdFaR7xs5mwd_G30NGjPVXXjUkqL_WrKMEsX9yB92ukJoNe8QuZRKBdRgp3Ft7ty2de7OYVHSaaIN-fShQnjx0Wytohwnv0OvqwTHn2ke6otORinDH2_qk57LkdtIEmDNdZ2tvFMktX8GDH5GjuZwjLk4p6MnScT9kkUh58gjOImkYjHtkPNilgjfQ-yro1A5SikpaI6lVZ80h7oTZ1hvS4u13-Mqg6i8bnRRpYQQNOn8Y56CEE5PmgnoByPwCQga8NpOkFXGDbAlGlwHw_UscH-6RmxZK5-ZlEKv2inWe6XwsDAw0HGfLh6TrHedixLEG0vsloO51bHYPjfwVmJY40PQl1kB1wYg-C7HuofF95NyhdNekA8ds_1Cg1R-06TGSfenZgZYlLVkXDlb9HF-pTj1s3S1T-MPV6WDp21_m4BDyTUyJQYAlhPIk4WEDhhwmdFLz2qCU1-0fg2FDqxvk4LEWNSBtE1-gOYbqynARLSfE8J8mcKN6MjoG9Rbxcw6KmBUb8V4lfz3v8l44Vk2GXH0_sMa-WJBUmifsaq6pBjV8PFnfO9qwqpv0glKhsKEz5Ujs_GHwaEhrXHG8VwETcDJVppZdFzV7F2xUcuNVI-8pXDHGt4-oxvzHANJ8WT5h-fQDdDLHxXyaEVzsKFZ09VJXlZpPbuaNGg1YVQj4C6G2DFkpLPZ5rC8ErYDtSJPyuOtn1nLWxxjc7CfE2VEUXKYYuXJ7t0aXf0lwY8bUitGmz03-q-Vb1F6g-cUoUaCreRGAr9_O0J0kxSofbQlerCREjrLcvkgkfU3pQUcTY3PkhCBszxKDoiYkpdTyvKv2FNFbyEOQdjbWV5CvmHkS5zX3iIMEluQvL3GHfy6_1J1LJhpyXyBJ3K2XP87im8faY8eeOQQaCh2ajKI5rvAY1CAozyYOYJ0HYRkf1QhnMpvtCuZgH6GzRwPu_vqj95uR_1fo2mxCcwbq7UKmh_UBHts0VPCjeAUdQbbqSe6YRPqmOyD12oukkt6JI0hsESPNcG7f4E59EpAvSCcfXE0-6rfqBFcfvJMTaxrQryUt0P8vRbGaBuEExcxIz-YdbcTI4n6hS8wNzaHSAQUqGfdQb09zP4yeVaPt4P-Rvl371pAL-pJn0ODnLSuAAluNcta6r2Je88Tg5Wqe51nUKhRJo5x6yzw5DfSK48XnrOPvWDh2tKCdIFwaG1h67_SZxGjwd4lbtjZdKNJAXrOlPtUvuidPG6zG2ZSPPceKEs28zDTbJpOuluNK0DvsUIh6ks97akPCzQoCk_-0aDZQTZ3i_MYe7ZtQEAXFbqILoRlV6x-HYV-3cFqU5AW9Sf_SpkJferbuwJimh3hxsGWtEfo3u44kjXPtyWdAwNWjJk7Bty-3sxiqkCpnq4VMV0Sb3IhE23gOBMw5ojeQjkp_3_93n_Xvk7-IABqmzi31FzwwHvdmOCgwQMe8AtigvgMGyw7o018M8Rm6NmJ920tqz26N5R15sQ5MfIPjYlrH94AQSMOn6ugUKBg7SaQdyE2J9hjRDOw0e_NmfA51yCHw0h06QhT-kvKm_tebwEapDE9pCrmN7G8-D8RLbZMdy24WQ5_BsNDxa0LNGwD1utDE4Xpv_yP1oJbFSdJctqSyifZNPrvBox3pUxXdliD40CQPEChKpEQO9yIsnvKSNx0Yal1X_WH1AMDqQaT9pPXWahTGymmdh1QQyaeY6MIi13aMN3VNRZb2oqow19SOCo5M8Y_Bo6iyC1shEf-VfJ1mNK-Sf7CTbwAQi2KOOYH0luoMGVBl4MFPsqH2tVkKkJsGwHqXV_qy5MF0U2eC7J5sFsTLpYK_qgwPJIWhBfYjYjt9mMHVyn6cngIhFx-QDIkWaoVT67XnvQ.AHETzlGgERa-qrg0tny53g');
+    await bot.waitForReady()
 
-    const gpt = new ChatGPTClient({
-      clearanceToken: '.NFxnQSCspWK.QH8qcE2aXZvLTXqL6yJeo6O6lajbW0-1673184210-0-1-6ed987fe.4165c997.69e48cb6-250',
-      sessionToken0: 'eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..P11kfRBor2GvVCv1.hRzqYYT964BxP5_lTgBi45ykospJJuFvd_9ZD4dwIMaD8ijXmOWec50Sar-JBGidoYeNltIPSUJ92WovhOlqfj3x6r7RE_7qmfOtVOCRpbqboRG7j3DUk2TiD92OiBcIUjYgaDR-9H7rk6B_IZD27DwTFgUuMQms8qWAwlVCtw_O0PEm0_Qhq52P7YDWwbbSKVirvRetzjqLHuTllKewhL7AOYmr4vZ-f5Lfn5PIbToekCUBoS_xvVQqRjWuZUl_jJpe4vFjyjnhew02TxvxefVs6cecpnigwvQ2CwJ7fJRfudb8g4HmAntLuiR5hayrNIVgOvymGb-4BK7PCQZ58sOpK96s4lAC9wXINm935Fpl1C58eVDrCjOezcNQk7Nrj9ra4Su_TRpOhBSNUnKElmP0c_oNiUae_ftPL13sQulpCG3LxxaVmkZFkgGsiMaJIWv6BLNlX5lqnnuhp1Xqcvh4iIOvk02aoLsDN8oyz9caC97uUi19ZwLF6jRrS3-pwMRWro0Y9n362sggI_GnYJSLguyqZSWXsIDaTGqK7cK3nWswuVEueCL4xH867d6Erw_LUvDMArs-rSM_EERqAnbK9caJVpk2aNOmz8DsnH_gluv95vo9BaJap0oMKC6v8EwrN1AvVny7hQjpiXUcyTSGep8ei42R1EtaXWcSJ5khj1De1hdWAp9DaulWBTaCZ6Xqs3RQTeBKqp_owxqWuwOEDQoekV-qCimHHjd1i_omiwNVSAAjEDPPky8SMynUNfsNfS4ECOWQOMLl6HWxIXEb3kXmDsRyXkNsTw6O6b1hhBFuNa2MhRiAmL8wTPXi5D_DcjSWbe7aUopGNFuucuejYaXYEPAXKkCHljwH2Tu0iXVeZ1jq32c5QfQ7Z3PC6lmhN5XO9C1rd2fQCgec6MMNKWubzTNmR6BOdjhHgicaJofb92p3swHttTfHn7t54P642tpfBd05k0xZHfMnrwRzQcIZkYuLqwRk7spbhPBl5_tbut0LQlWNuRRLgvfRm_naS19XZtAeNwfN2bL8L1Kn6GONIG-8jDH63ntc5CDJkx32rZlzQH6Aw3-NTjSEn7dvsyKeLRSpPlj6ng1LVx8G6aKb5-3qpN8nNMPc9ecoRd56t58EFTFVMT4eSVmd14kAgsw6HKyOdEgEbjtjl2XgUmSPwbsOWHtYtDgnupSiVcVAuPDnl6MMTbgTgqKBtj26nCowOn_LRyaohrPW2badh1OsUHha39ALDWQueOT1HPlVd0jIyqj_heUTBN_jUEOX1MN3036p77YdJE7zi0Ea4LP_CKlsKHXKASV9MBcBRJGJQb52prCt36gowAvQeW5L2gFlOhNmV1ZT_K4NtEQSXJnZmFrAjilwGc0Ta9Ko_UptWEHXS3QJ_AJNRVHNoFWRF_diy_88zwE08gssU4LFAJIP8fUeEPO8RlbdjsPUlUEtTmknfx0ID1EudPMSpe7nIAHbqxTw9h_YO4-onmeAMcb5SotZ3wZrX2FK3eIbow-Hc1tKGgha4beXHECsjPEBy3DmSQX4291IrGw9Nesyu1iXM1WR1iAT3gIrG-8R1mEoM2jAKA1_IQexouMNVqYJN2ZVPliZUr5Y5vKs4r9jfjhBOT_0xh2LJ2zSRRpATZPvbe-7ebh9TUueS_3ovY3r9SNjeRe6I4Izixsx8EpcxZ8PwQ5I_lQ3bxwm9ObZXZZ9cw7lF3rXwJ30pGAHdV2iwzK5MyYsTPgfummEIyFvEUl1Vniw_e3ELrvhM4-KTrVX3jrQWYyWj6CCVHYKWlvD0b44ZvKCUIU4qP1q7oF9bp2AR4w3I2oIT0foYbktiidMSN9pH1MfLoagp_nMwpSGee0t8KiGx4NcYLwvPJ9mWdFUaP8LZOC49fBM4fCfeZUkQ3UwHW4SfSzm6iuo_iccYxNgbB08e0iK6feaxLMfCl8SvLoCAJaAenj_v0lD1w0EDvKMEe9A5W7298-kB9W74Y69bVcdK-UKrdBThPc1e-Wj38ISOyxwcUNNfMHbJ-2-ZXKauRCyTXBQSdFz94Wq0enSKBluIwuvyXepM03BLbXDxDeZKWdeq4Ox7Cw36WRgQ-P_aJWELxkcrMrVo8AVAndlfmp6dk0jXdygS6TAEEapu0a-MoJ3diyOfMU4bhHCEjdg_DMIXfueDxoU0lCI4hDClRkPF6DB074H5E-Q9Ar196c7joBXVQn15lTA5BMzGp149pcpRwabse1y-8Vv5GhTksmahKN6C5HqGVCHJQSwvg.pnZgp1740HSAYRwWKsDIEA',
-    });
-    const convo = await gpt.startConversation()
-    const data = await convo.chat("write this data into a json object: write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, also write a stat for each of them upgrading their parent category by a number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade")
+    const data = await bot.ask("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade")
     await console.log(`Before: ${data}`)
+    let json = null
     try {
-      data = JSON.parse(data.split('```')[1])
-      console.log(`After: ${data}`)
-      collection.insertOne({ missionList: data, time: (Date.now() / 1000) })
-    } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions() }
-    updateMissions()
+      json = JSON.parse(data)
+      console.log(`After: ${json}`)
+      collection.insertOne({ missionList: json, time: (Date.now() / 1000) })
+    } catch (e) {
+      try {
+        json = JSON.parse(data.split('```')[1])
+        console.log(`After: ${json}`)
+        collection.insertOne({ missionList: json, time: (Date.now() / 1000) })
+      } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions() }
+      await updateMissions()
+    }
   }
 }
 
 async function updateMissions() {
-  //TODO
-}
+  const collection = await mongo.db("userData").collection("missions");
+  missions = await collection.find({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })[0].missionList.missions
+  const collection = await mongo.db("userData").collection("users");
+  user = await collection.findOne({ key: getCookie('userKey') })
+  if (user.hasRefreshed == null) await collection.updateOne({ key: getCookie('userKey') }, { $set: { hasRefreshed: false } })
+  user = await collection.findOne({ key: getCookie('userKey') })
+  var elements = document.querySelectorAll('.mission-board');
+  let categories = ["defense", "strength", "intelligence"]
+  let emoticons = ["&#128737", "&#128170", "&#129504"];
+  if (!user.hasRefreshed) {
+    elements.innerHTML = ""
+    for (let i = 0; i < missions.length; i++) {
+      if (i % 2 == 0) {
+        category = categories[Math.floor(Math.random() * categories.length)]
+        emoji = emoticons[categories.find(category)]
+        elements.innerHTML += `<div class="mission">
+            <label id=>
+              <div class="row">
+                <div class="column1">
+                  <input class="checkbox" type="checkbox" value="mission1" onclick="confettiCheck()">
+                </div>
+                <div class="column2">
+                  <p id="title" class="title"><b>${missions[i].name}</b></p>
+                  <p class="description">${missions[i].description}</p>
+                </div>
+                <div class="column3">
+                  <p class="${missions[i].category}" value="${missions[i].upgrade}">+${missions[i].upgrade} ${missions[i].category} ${emoticons[categories.find(missions[i].category)}</p>
+                  <p class="${category}" value="${Math.floor(missions[i].upgrade)}">+${Math.floor(missions[i].upgrade)} ${category} ${emoji}</p>
+                </div>
+              </div>
+            </label>
+          </div>`
+      }
+    }
+  } else {
+    elements.innerHTML = ""
+    for (let i = 0; i < missions.length; i++) {
+      if (i % 2 != 0) {
+        category = categories[Math.floor(Math.random() * categories.length)]
+        emoji = emoticons[categories.find(category)]
+        elements.innerHTML += `<div class="mission">
+            <label id=>
+              <div class="row">
+                <div class="column1">
+                  <input class="checkbox" type="checkbox" value="mission1" onclick="confettiCheck()">
+                </div>
+                <div class="column2">
+                  <p id="title" class="title"><b>${missions[i].name}</b></p>
+                  <p class="description">${missions[i].description}</p>
+                </div>
+                <div class="column3">
+                  <p class="${missions[i].category}" value="${missions[i].upgrade}">+${missions[i].upgrade} ${missions[i].category} ${emoticons[categories.find(missions[i].category)}</p>
+                  <p class="${category}" value="${Math.floor(missions[i].upgrade)}">+${Math.floor(missions[i].upgrade)} ${category} ${emoji}</p>
+                </div>
+              </div>
+            </label>
+          </div>`
+      }
+    }
+  }
 
+}
+//TOFDO LATER
 async function textboxColor() {
   var elements = document.querySelectorAll('.mission-board');
+
   for (let i of elements) {
     console.log(i)
   }
@@ -170,30 +236,79 @@ async function confettiCheck() {
       return false;
     }
   }
-  return true;
+  start();
+  stop();
 }
 
-var r = document.querySelector(':root');
+function findStatXpPerc(totalXP, next) {
 
-function changeXP() {
-  var strengthXP = '40%';
-  var defenseXP = '4%';
-  var intelligenceXP = '4%';
-  var overallXP = '45%';
- 
+  let levelTotalXp = next //50
+  let level = 0
+  //1-50 xp level 1
+  //50-200 xp lvl 2
+  while (totalXP >= levelTotalXp) {
+    level++
+    totalXP -= levelTotalXp
+    levelTotalXp += next
+  }
+  return [totalXP == 0 ? 0 : (totalXP / levelTotalXp), level]
+}
+
+
+async function changeXP() {
+  var r = document.querySelector(':root');
+  const collection = await mongo.db("userData").collection("users");
+  user = await collection.findOne({ key: getCookie('userKey') })
+  let strength = findStatXpPerc(user.strength, 50)[0]
+  let defense = findStatXpPerc(user.defence, 50)[0]
+  let intelligence = findStatXpPerc(user.intelligence, 50)[0]
+  let overall = findStatXpPerc((user.strength + user.defense + user.intelligence), 150)[0]
+  console.log(overall)
+  var strengthXP = strength + "%";
+  var defenseXP = defense + "%";
+  var intelligenceXP = intelligence + "%";
+
+
+  var overallXP = overall + "%";
+
   r.style.setProperty('--strengthBar', strengthXP);
   r.style.setProperty('--defenseBar', defenseXP);
   r.style.setProperty('--intelligenceBar', intelligenceXP);
   r.style.setProperty('--overallBar', overallXP);
-  console.log("stats changed")
+  console.log("stats changed!")
+
+  var numStre = document.getElementById('numStre');
+  numStre.innerHTML = strength + "XP";
+  var numDef = document.getElementById('numDef');
+  numDef.innerHTML = defense + "XP";
+  var numInt = document.getElementById('numInt');
+  numInt.innerHTML = intelligence + "XP";
+  var numOver = document.getElementById('numOver');
+  numOver.innerHTML = overall + "XP";
+
 };
 
-var userLevel = 1;
-function changeLevel() {
+async function changeRank() {
+  const collection = await mongo.db("userData").collection("users");
+  user = await collection.findOne({ key: getCookie('userKey') })
   level = document.getElementById('levelNumber');
+
+  userLevel = findStatXpPerc((user.strength + user.defense + user.intelligence), 150)[1];
+
   level.innerHTML = userLevel;
   console.log("lvl changed")
+
+  rank = document.getElementById('rank')
+  if (level < 10) rank.innerHTML = "Rookie Grinder I"
+  else if (level < 20 && level > 9) rank.innerHTML = "Rookie Grinder II"
+  else if (level < 30 && level > 19) rank.innerHTML = "Rookie Grinder III"
+  else if (level < 40 && level > 29) rank.innerHTML = "Veteran Grinder I"
+  else if (level < 50 && level > 39) rank.innerHTML = "Veteran Grinder II"
+  else if (level < 60 && level > 49) rank.innerHTML = "Veteran Grinder III"
+  else if (level < 70 && level > 59) rank.innerHTML = "Elite Grinder I"
+  else (rank.innerHTML = "Sigma")
 };
+
 
 
 window.getCookie = getCookie
@@ -202,8 +317,7 @@ window.login = login
 window.signup = signup
 window.setName = setName
 window.setPfp = setPfp
-window.changeXP = changeXP
-window.changeLevel = changeLevel
+window.confettiCheck = confettiCheck
 
 window.onload = async function() {
   mongoU = await app.logIn(credentials)
@@ -218,12 +332,7 @@ window.onload = async function() {
     user.onclick = async function() { await setName() };
     document.getElementById("files").onclick = async function() { await setPfp() }
     document.getElementById("logoutBtn").onclick = async function() { await logout() }
-    changeXP();
-    changeLevel();
     await getMissions()
-    document.getElementById("cbox1").onclick = async function() { await confettiCheck() }
-
-
   }
   //here 
 

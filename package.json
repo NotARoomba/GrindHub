@@ -4,7 +4,7 @@
     "browserify": "^17.0.0",
     "browserify-aws-sdk": "^1.0.4",
     "chatgpt": "^3.3.11",
-    "chatgpt-io": "^1.0.4",
+    "chatgpt-io": "^1.0.5",
     "dotenv": "^16.0.3",
     "js-sha256": "^0.9.0",
     "node-mailjet": "^6.0.0",
