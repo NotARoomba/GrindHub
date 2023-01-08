@@ -5,17 +5,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>GrindHub</title>
+  <link rel="icon" type="image/x-icon" href="img/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;900&family=Roboto:ital,wght@0,300;0,400;1,400&display=swap"
+    rel="stylesheet">
+
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script src="./bundle.js"></script>
   <script src="./confetti.js"></script>
 </head>
 
-<body>
+<body class="body1">
   <main>
 
     <header>
-      <h2>My Dashboard</h2>
-      <div id="logoutBtn" class="logout-icon">
+      <h2 style="color:white;">My Dashboard ⚔️</h2>
+      <div id="logoutBtn" class="logout-icon" onclick="doorSfx()">
         &#128682
       </div>
       <div id="guideBtn" class="guide-icon" onclick="openPop()">
@@ -23,21 +30,21 @@
       </div>
 
       <div class="pop-out" id="pop-out">
-        <h4 class="works"><b>How does it work</b></h4>
         <p id="closePop" onclick="closePop()">X</p>
+        <h4 class="works"><b>Grinder Ranks</b><span class="">&#128170</span></h4>
         <div>
-          <row>
-            <column1-1>
+          <div class="row">
+            <div class="column1-1">
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/RookieGrinderI.png">
                 <div class="mText">
-                  <h4 class="mTitle">Rookie Grinder I</h4>
+                  <h4 class="mTitle"><b>Rookie Grinder I</b></h4>
                   <p class="mPar">Level 1-9</p>
                 </div>
               </div>
 
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/RookieGrinderI.png">
                 <div class="mText">
                   <h4 class="mTitle">Rookie Grinder II</h4>
                   <p class="mPar">Level 10-19</p>
@@ -45,7 +52,7 @@
               </div>
 
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/VeteranGrinderI.png">
                 <div class="mText">
                   <h4 class="mTitle">Veteran Grinder I</h4>
                   <p class="mPar">Level 20-29</p>
@@ -53,18 +60,18 @@
               </div>
 
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/VeteranGrinderII.png">
                 <div class="mText">
                   <h4 class="mTitle">Veteran Grinder II</h4>
                   <p class="mPar">Level 30-39</p>
                 </div>
               </div>
-              
-            </column>
-            
-            <column1-2>
+
+            </div>
+
+            <div class="column1-2">
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/EliteGrinderI.png">
                 <div class="mText">
                   <h4 class="mTitle">Elite Grinder I</h4>
                   <p class="mPar">Level 40-49</p>
@@ -72,7 +79,7 @@
               </div>
 
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/EliteGrinderII.png">
                 <div class="mText">
                   <h4 class="mTitle">Elite Grinder II</h4>
                   <p class="mPar">Level 50-59</p>
@@ -80,7 +87,7 @@
               </div>
 
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/MasterGrinderI.png">
                 <div class="mText">
                   <h4 class="mTitle">Master Grinder</h4>
                   <p class="mPar">Level 60-69</p>
@@ -88,15 +95,15 @@
               </div>
 
               <div class="medal">
-                <img class="medal-img">
+                <img class="medal-img" src="img/SIGMA.png">
                 <div class="mText">
-                  <h4 class="mTitle">Sigma Grinder</h4>
+                  <h4 class="mTitle">SIGMA Grinder</h4>
                   <p class="mPar">Level 999</p>
                 </div>
               </div>
-              
-            </column>
-          </row>
+
+            </div>
+          </div>
         </div>
       </div>
 
@@ -105,15 +112,15 @@
     <div class="row">
       <div class="column">
         <div class="container2">
-          <h4>Daily Missions</h4>
-          <span class="emoji" id="refresh" onclick="changeXP()">&#128260</span>
+          <h4><b>Daily Missions</b></h4>
+          <span class="emoji" id="refresh" onclick="updateMissions(true)">&#128260</span>
         </div>
 
 
 
         <div class="mission-board">
 
-
+          <!-- 
           <div class="mission">
             <label id=>
               <div class="row">
@@ -135,7 +142,7 @@
             </label>
           </div>
 
-          <!-- <div class="mission" id="mission">
+          <div class="mission" id="mission">
             <label>
               <div class="row">
                 <div class="column1">
@@ -224,7 +231,7 @@
         </div>
       </div>
       <div class="column">
-        <h4>My Stats</h4>
+        <h4><b>My Stats</b></h4>
 
         <div class="profile">
 
@@ -246,7 +253,8 @@
             <div id="chg-username" class="edit-pencil">&#9999</div>
           </div>
 
-          <p class="rank" id="rank"><b>Rank Name</b></p>
+          <img id="rankImg" src="img/RookieGrinderI.png">
+          <b><p class="rank" id="rank"><b>Rank Name</b></p></b>
 
 
           <div class="level">
@@ -256,7 +264,7 @@
           <div class="stats-bar">
             <div class="strength">
               <div class="details">
-                <p>Strength</p>
+                <p>Strength 💪 <span class="levelSt" id="strLevel">Level 0</span></p>
                 <p id="numStre">0 XP</p>
               </div>
               <div class="bar">
@@ -267,7 +275,7 @@
 
             <div class="defense">
               <div class="details">
-                <p>Defense</p>
+                <p>Defense 🛡<span class="levelSt" id="defLevel">Level 0</span></p>
                 <p id="numDef">0 XP</p>
               </div>
               <div class="bar">
@@ -277,7 +285,7 @@
 
             <div class="intelligence">
               <div class="details">
-                <p>Intelligence</p>
+                <p>Intelligence 🧠 <span class="levelSt" id="intLevel">Level 0</span></p>
                 <p id="numInt">0 XP</p>
               </div>
               <div class="bar">
@@ -287,7 +295,7 @@
 
             <div class="overall">
               <div class="details">
-                <p>Overall Stats</p>
+                <p>Overall Stats ⭐<span class="levelSt" id="overLevel">Level 0</span></p>
                 <p id="numOver">0 XP</p>
               </div>
               <div class="bar">
@@ -314,18 +322,20 @@
       function closePop() {
         pop = document.getElementById('pop-out')
         pop.style.visibility = 'hidden'
+        btnSfx()
       };
 
       function openPop() {
         pop = document.getElementById('pop-out')
         pop.style.visibility = 'visible'
+        btnSfx()
       };
 
       // for starting the confetti 
       const start = () => {
         setTimeout(function () {
           confetti.start()
-        }, 1000); // 1000 is time that after 1 second start the confetti ( 1000 = 1 sec)
+        }, 1000);
         let beat = new Audio('audio/congrats.mp3');
         beat.play();
       };
@@ -335,8 +345,20 @@
       const stop = () => {
         setTimeout(function () {
           confetti.stop()
-        }, 3000); // 5000 is time that after 5 second stop the confetti ( 5000 = 5 sec)
+        }, 3000);
       };
+
+      function doorSfx() {
+        let openBeat = new Audio('audio/door.mp3');
+        openBeat.play();
+      };
+
+      function btnSfx() {
+        let btnBeat = new Audio('audio/button.mp3');
+        btnBeat.play();
+      };
+
+
 
 
 

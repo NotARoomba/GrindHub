@@ -5,24 +5,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>GrindHub</title>
+  <link rel="icon" type="image/x-icon" href="img/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;900&family=Roboto:ital,wght@0,300;0,400;1,400&display=swap"
+    rel="stylesheet">
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="./bundle.js"></script>
 </head>
 
-<body>
+<body class="body2">
+  <div class="context">
   <header>
     <table>
       <tr>
         <td>
-          <h1 style="font-weight: 400; font-size: 40px;">
+          <h1 style="font-weight: 500;">
             Welcome to
           </h1>
         </td>
       </tr>
       <tr>
         <td>
-          <img class="logoimg" src="/img/logo.png" width="310" height="57">
+          <img class="logoimg" src="/img/3500d3-1.png" width="310" height="57">
         </td>
       </tr>
       <tr>
@@ -32,10 +39,24 @@
       </tr>
     </table>
   </header>
+    <div class="area" >
+            <ul class="circles">
+                    <li onclick="rick()"></li>
+                    <li></li>
+                    <li></li>
+                    <li onclick="rick()"></li>
+                    <li></li>
+                    <li></li>
+                    <li onclick="rick()"></li>
+                    <li></li>
+                    <li></li>
+                    <li onclick="rick()"></li>
+            </ul>
+    </div >
 
   <div class="container">
 
-    <h3 style="color:#CF6679"><b>Sign up</b></h3>
+    <h3 class="underline"><b>Sign up</b></h3>
     <label for="signupEmail">E-mail</label><br>
     <input type="text" placeholder="" id="signupEmail" required><br><br>
 
@@ -50,7 +71,12 @@
       window.location.replace("https://grindhub.notanaperture.repl.co/dashboard.html")
     }
 
+    function rick(){
+      window.open("https://youtu.be/dQw4w9WgXcQ")
+    }
+
   </script>
+  </div>
 </body>
 
 </html>
