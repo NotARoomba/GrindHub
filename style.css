@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Manrope&display=swap');
+<style> 
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&display=swap'); </style>
 
 html, body {
   height: 100%;
@@ -17,13 +18,12 @@ body {
   padding: 5px;
   font-family: "Manrope", sans-serif;
   background: #121212;
-  overflow-x:auto;
-  min-height: 800px;
-  flex-direction: column;
+  overflow-x:hidden;
+  min-height: 1050px;
+  overflow-y: scroll
 }
 
 palette{
-
   PRIMARY: #BB86FC;
   PRIMARYVARIANT: #3700B3;
   SECONDARY: #03DAC6;
@@ -52,10 +52,10 @@ h4{
   font-size: 40px;
   margin:0;
   padding:0;
+  font-weight: 200;
 }
 
 h5{
-  color:#CF6679;
   font-size: 25px;
 }
 
@@ -129,10 +129,11 @@ input[type=text], input[type=password] {
 header{
   display: flex;
   margin: 10px;
-  margin-top: 30px;
+  margin-top: 40px;
   justify-content: center;
   align-items: center;
 }
+
 main{
   display: flex;
   flex-direction: column;
@@ -159,14 +160,22 @@ main{
   background-color: #BB86FC;
   border-radius: 15px;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .mission{
   background-color: #3700B3;
   margin: 10px;
   border-radius: 10px;
-  width: 90%;
+  width: 95%;
 }
+
+.mission:hover{
+  background-color:#1e0656;
+  transition: 0.6s;
+}
+
 .emoji{
   font-size: 60px;
   align-self: center;
@@ -183,7 +192,7 @@ main{
 }
 
 .column2 {
-  flex: 50%;
+  flex: 45%;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -191,11 +200,19 @@ main{
 }
 
 .column3 {
-  flex: 35%;
+  flex: 25%;
   justify-content: center;
   align-items: center;
   display: flex;
   flex-direction: column;
+}
+
+.column4 {
+  flex: 15%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  vertical-align:center;
 }
 
 .title{
@@ -212,22 +229,91 @@ main{
   text-align: left;
 }
 
+input.checkbox{
+  width:50px;
+  height:50px;
+  vertical-align:center;
+  display:flex;
+  align-self:center;
+}
+
+ input[type=checkbox] {
+          accent-color: white;
+        }
+
+.profile{
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  flex-direction:column;
+}
+
 .profile-pic{
-  height: 100px;
+  height: 150px;
   margin: 10px;
   border-radius: 50%;
-  width: 100px;
+  width: 150px;
   border: ridge;
   border-width: 5px;
   border-color: #3700B3;
+  color:white;
+  position: relative;
+  
+}
+
+.profile-pic:hover{
+  transition: 0.4s;
+  opacity:0.3;
+}
+
+.text{
+  color:#BB86FC;
+  position:absolute;
+  left:65px;
+  top:75px;
+  display: none;
+  opacity:0;
+  transition:0.3s;
+}
+
+.profile-pic:hover + .text{
+  display: block;
+  opacity:1;
+}
+
+.text:hover{
+  display: block;
+  opacity:1;
+}
+
+.container{
+  position:relative;
+  justify-content: center;
 }
 
 .user{
   margin: 10px;
+  color:#CF6679;
+}
+
+.wrap-user{
+overflow-wrap: break-word;
 }
 
 .level{
   margin: 10px;
+}
+
+.stats-bar{
+  width: 70%;
+  border:solid;
+  border-color:white;
+  border-width:2px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  text-align:center;
+  justify-content:center;
 }
 
 .details{
@@ -254,4 +340,86 @@ main{
 
 .skills:not(:last-child){
     margin-bottom: 30px;
+}
+
+#strength-bar{
+    animation: strength-fill 2s forwards;
+}
+
+@keyframes strength-fill{
+    100%{
+        width: 90%;
+    }
+}
+
+#defense-bar{
+    animation: defense-fill 2s forwards;
+}
+
+@keyframes defense-fill{
+    100%{
+        width: 40%;
+    }
+}
+
+#intelligence-bar{
+    animation: intelligence-fill 2s forwards;
+}
+
+@keyframes intelligence-fill{
+    100%{
+        width: 50%;
+    }
+}
+
+#overall-bar{
+    animation: overall-fill 2s forwards;
+}
+
+@keyframes overall-fill{
+    100%{
+        width: 20%;
+    }
+}
+
+.ltitle{
+  background-color: #BB86FC;
+  color:#3700B3;
+  padding:10px;
+  margin:10px;
+  width:150px;
+  border-radius:30px;
+  font-size:20px;
+}
+
+.hidden{
+  visibility: hidden;
+}
+
+.edit-pencil{
+  font-size:35px;
+  margin:0;
+  color:white;
+}
+
+.edit-pencil:hover{
+  color:#CF6679;
+}
+
+.username-big-wrap{
+  display: flex;
+  flex-direction: row;
+}
+
+.logout-icon{
+  font-size:40px;
+  position:absolute;
+  right:0;
+  margin:20px;
+}
+
+.logout-icon:hover{
+  transition: 0.5s;
+  opacity:0.3;
+  
 }

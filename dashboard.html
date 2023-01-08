@@ -7,86 +7,265 @@
   <title>GrindHub</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script src="./bundle.js"></script>
+  <script src="confetti.js"></script>
 </head>
-<body>
-<main>
-
-<header>
-    <h2>My Dashboard</h2>
-  </header>
   
-  <div class="row">
-    <div class="column">
-      <h4>Daily Missions</h4>
-      <div class="mission-board">
+<body>
+  <main>
 
-        <div class="mission">
-          <div class="row">
-            <div class="column1">
-              <span class="emoji">&#129380</span>
-            </div>
-            <div class="column2">
-              <p class="title"><b>Drink Water</b></p>
-              <p class="description">Take at least 3 gallons of water during the day</p>
-            </div>
-            <div class="column3">
-              <p class="defense" value="15">+15 def &#128737</p>
-              <p class="strength" value="2">+2 strength &#128170</p>
-            </div>
-          </div>
-        </div>
+    <header>
+      <h2>My Dashboard</h2>
+      <div id="logoutBtn" class="logout-icon">
+        &#128682
+      </div>
+    </header>
+    <div class="row">
+      <div class="column">
+        <h4>Daily Missions</h4>
 
-      </div>
-    </div>
-    <div class="column">
-      <h4>My Stats</h4>
-      
-      <div class="profile">
-        <h5 class="user" style="font-size: 30px;"><b>User</b></h5>
-        <img class="profile-pic" src="img/puss_profile.jpeg">
-      </div>
-      
-      <div class="level">
-        <h5>Level 2</h5>
-        <div class="level-bar"></div>
-      </div>
+        <div class="mission-board">
 
-      <div class="stats-bar">
-        <div class="strength">
-          <div class="details">
-          <p>Strength</p>
-          <p>45 XP</p>
-          </div>
-          <div class="bar">
-            <div id="jQuery-bar"></div>
+          
+          <div class="mission">
+            <label id=>
+            <div class="row">
+              <div class="column1">
+                <span class="emoji">&#129380</span>
+              </div>
+              <div class="column2">
+                <p id="title"class="title"><b>Drink Water</b></p>
+                <p class="description">Take at least 3 gallons of water during the day</p>
+              </div>
+              <div class="column3">
+                <p class="defense" value="15">+15 def &#128737</p>
+                <p class="strength" value="2">+2 strength &#128170</p>
+              </div>
+              <div class="column4">
+               <input class="checkbox" type="checkbox" id="cbox1" value="mission1" onclick="confettiCheck()">
+              </div>
+            </div>
+              </label>
           </div>
           
+          <div class="mission" id="mission">
+            <label>
+            <div class="row">
+              <div class="column1">
+                <span class="emoji">&#127811</span>
+              </div>
+              <div class="column2">
+                <p class="title"><b>Drink Water</b></p>
+                <p class="description">Take at least 3 gallons of water during the day</p>
+              </div>
+              <div class="column3">
+                <p class="defense" value="15">+15 def &#128737</p>
+                <p class="strength" value="2">+2 strength &#128170</p>
+              </div>
+              <div class="column4">
+               <input class="checkbox" type="checkbox" id="cbox2" value="mission1" onclick="confettiCheck()">
+              </div>
+            </div>
+              </label>
+          </div>
+
+          <div class="mission" id="mission">
+            <label>
+            <div class="row">
+              <div class="column1">
+                <span class="emoji">&#128065</span>
+              </div>
+              <div class="column2">
+                <p class="title"><b>Drink Water</b></p>
+                <p class="description">Take at least 3 gallons of water during the day</p>
+              </div>
+              <div class="column3">
+                <p class="defense" value="15">+15 def &#128737</p>
+                <p class="strength" value="2">+2 strength &#128170</p>
+              </div>
+              <div class="column4">
+               <input class="checkbox" type="checkbox" id="cbox3" value="mission1" onclick="confettiCheck()">
+              </div>
+            </div>
+              </label>
+          </div>
+
+          <div class="mission" id="mission">
+            <label>
+            <div class="row">
+              <div class="column1">
+                <span class="emoji">&#127817</span>
+              </div>
+              <div class="column2">
+                <p class="title"><b>Drink Water</b></p>
+                <p class="description">Take at least 3 gallons of water during the day</p>
+              </div>
+              <div class="column3">
+                <p class="defense" value="15">+15 def &#128737</p>
+                <p class="strength" value="2">+2 strength &#128170</p>
+              </div>
+              <div class="column4">
+               <input class="checkbox" type="checkbox" id="cbox4" value="mission1" onclick="confettiCheck()">
+              </div>
+            </div>
+              </label>
+          </div>
+
+          <div class="mission" id="mission">
+            <label>
+            <div class="row">
+              <div class="column1">
+                <span class="emoji">&#128054</span>
+              </div>
+              <div class="column2">
+                <p class="title"><b>Drink Water</b></p>
+                <p class="description">Take at least 3 gallons of water during the day</p>
+              </div>
+              <div class="column3">
+                <p class="defense" value="15">+15 def &#128737</p>
+                <p class="strength" value="2">+2 strength &#128170</p>
+              </div>
+              <div class="column4">
+               <input class="checkbox" type="checkbox" id="cbox5" value="mission1" onclick="confettiCheck()">
+              </div>
+            </div>
+              </label>
+          </div>
+
+
+          
         </div>
-        <div class="defense">
-          <p>Defense</p>
-        </div>
-        <div class="intelligence">
-          <p>Intelligence</p>
-        </div>
-        <div class="overall">
-          <p>Overall Stats</p>
-        </div>
-        
       </div>
-      
+      <div class="column">
+        <h4>My Stats</h4>
+
+        <div class="profile">
+
+
+          <input type="file" id="files" accept="image/*" class="hidden" />
+          <div class="container">
+            <label for="files" id="fileHook" style="color:white;">
+              <img class="profile-pic" id='userPfp' src="img/default.jpeg">
+              <span class="text">Edit pfp</span>
+            </label>
+          </div>
+
+
+          <div class="username-big-wrap">
+            <div class="wrap-user">
+              <h5 class="user" style="font-size: 30px;"><b id='username'>User</b></h5>
+            </div>
+
+            <div id="chg-username" class="edit-pencil">&#9999</div>
+          </div>
+
+
+          <div class="level">
+            <h5 class="ltitle">Level 2</h5>
+          </div>
+
+          <div class="stats-bar">
+            <div class="strength">
+              <div class="details">
+                <p>Strength</p>
+                <p>45 XP</p>
+              </div>
+              <div class="bar">
+                <div id="strength-bar"></div>
+              </div>
+
+            </div>
+
+            <div class="defense">
+              <div class="details">
+                <p>Defense</p>
+                <p>34 XP</p>
+              </div>
+              <div class="bar">
+                <div id="defense-bar"></div>
+              </div>
+            </div>
+
+            <div class="intelligence">
+              <div class="details">
+                <p>Intelligence</p>
+                <p>25 XP</p>
+              </div>
+              <div class="bar">
+                <div id="intelligence-bar"></div>
+              </div>
+            </div>
+
+            <div class="overall">
+              <div class="details">
+                <p>Overall Stats</p>
+                <p>425 XP</p>
+              </div>
+              <div class="bar">
+                <div id="overall-bar"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
     </div>
-  </div>
 
 
-  <script>
-    window.onload = function () {
+    <script>
       if (!getCookie("userKey")) {
         window.location.replace("https://grindhub.notanaperture.repl.co/")
       }
-    }
 
-  </script>
-</main>
-  </body>
+    </script>
+    
+    <script>
+
+      function confettiCheck() {
+        c1 = document.getElementById('cbox1');
+        c2 = document.getElementById('cbox2');
+        c3 = document.getElementById('cbox3');
+        c4 = document.getElementById('cbox4');
+        c5 = document.getElementById('cbox5');
+        
+        if (c1.checked == true){
+          if (c2.checked == true){
+            if (c3.checked == true){
+              if (c4.checked == true){
+                if (c5.checked == true){
+                  start();
+                  stop();
+                  console.log("all checked")
+                }
+              }  
+            }
+          }
+        }
+      };
+      
+        // for starting the confetti 
+        const start = () => {
+            setTimeout(function() {
+                confetti.start()
+            }, 1000); // 1000 is time that after 1 second start the confetti ( 1000 = 1 sec)
+            let beat = new Audio('audio/congrats.mp3');
+            beat.play();
+        };
+
+        //  for stopping the confetti 
+
+        const stop = () => {
+            setTimeout(function() {
+                confetti.stop()
+            }, 3000); // 5000 is time that after 5 second stop the confetti ( 5000 = 5 sec)
+        };
+        
+        
+
+    </script>
+
+
+  </main>
+</body>
 
 </html>
