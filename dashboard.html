@@ -7,9 +7,9 @@
   <title>GrindHub</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
   <script src="./bundle.js"></script>
-  <script src="confetti.js"></script>
+  <script src="./confetti.js"></script>
 </head>
-  
+
 <body>
   <main>
 
@@ -21,118 +21,122 @@
     </header>
     <div class="row">
       <div class="column">
+        <div class="container2">
         <h4>Daily Missions</h4>
+        <span class="emoji" id="refresh" onclick="changeXP()">&#128260</span></div>
+
+        
 
         <div class="mission-board">
 
-          
+
           <div class="mission">
             <label id=>
-            <div class="row">
-              <div class="column1">
-                <span class="emoji">&#129380</span>
+              <div class="row">
+                <div class="column1">
+                  <span class="emoji">&#129380</span>
+                </div>
+                <div class="column2">
+                  <p id="title" class="title"><b>Drink Water</b></p>
+                  <p class="description">Take at least 3 gallons of water during the day</p>
+                </div>
+                <div class="column3">
+                  <p class="defense" value="15">+15 def &#128737</p>
+                  <p class="strength" value="2">+2 strength &#128170</p>
+                </div>
+                <div class="column4">
+                  <input class="checkbox" type="checkbox" id="cbox1" value="mission1" onclick="confettiCheck()">
+                </div>
               </div>
-              <div class="column2">
-                <p id="title"class="title"><b>Drink Water</b></p>
-                <p class="description">Take at least 3 gallons of water during the day</p>
-              </div>
-              <div class="column3">
-                <p class="defense" value="15">+15 def &#128737</p>
-                <p class="strength" value="2">+2 strength &#128170</p>
-              </div>
-              <div class="column4">
-               <input class="checkbox" type="checkbox" id="cbox1" value="mission1" onclick="confettiCheck()">
-              </div>
-            </div>
-              </label>
-          </div>
-          
-          <div class="mission" id="mission">
-            <label>
-            <div class="row">
-              <div class="column1">
-                <span class="emoji">&#127811</span>
-              </div>
-              <div class="column2">
-                <p class="title"><b>Drink Water</b></p>
-                <p class="description">Take at least 3 gallons of water during the day</p>
-              </div>
-              <div class="column3">
-                <p class="defense" value="15">+15 def &#128737</p>
-                <p class="strength" value="2">+2 strength &#128170</p>
-              </div>
-              <div class="column4">
-               <input class="checkbox" type="checkbox" id="cbox2" value="mission1" onclick="confettiCheck()">
-              </div>
-            </div>
-              </label>
+            </label>
           </div>
 
           <div class="mission" id="mission">
             <label>
-            <div class="row">
-              <div class="column1">
-                <span class="emoji">&#128065</span>
+              <div class="row">
+                <div class="column1">
+                  <span class="emoji">&#127811</span>
+                </div>
+                <div class="column2">
+                  <p class="title"><b>Drink Water</b></p>
+                  <p class="description">Take at least 3 gallons of water during the day</p>
+                </div>
+                <div class="column3">
+                  <p class="defense" value="15">+15 def &#128737</p>
+                  <p class="strength" value="2">+2 strength &#128170</p>
+                </div>
+                <div class="column4">
+                  <input class="checkbox" type="checkbox" id="cbox2" value="mission1" onclick="confettiCheck()">
+                </div>
               </div>
-              <div class="column2">
-                <p class="title"><b>Drink Water</b></p>
-                <p class="description">Take at least 3 gallons of water during the day</p>
-              </div>
-              <div class="column3">
-                <p class="defense" value="15">+15 def &#128737</p>
-                <p class="strength" value="2">+2 strength &#128170</p>
-              </div>
-              <div class="column4">
-               <input class="checkbox" type="checkbox" id="cbox3" value="mission1" onclick="confettiCheck()">
-              </div>
-            </div>
-              </label>
+            </label>
           </div>
 
           <div class="mission" id="mission">
             <label>
-            <div class="row">
-              <div class="column1">
-                <span class="emoji">&#127817</span>
+              <div class="row">
+                <div class="column1">
+                  <span class="emoji">&#128065</span>
+                </div>
+                <div class="column2">
+                  <p class="title"><b>Drink Water</b></p>
+                  <p class="description">Take at least 3 gallons of water during the day</p>
+                </div>
+                <div class="column3">
+                  <p class="defense" value="15">+15 def &#128737</p>
+                  <p class="strength" value="2">+2 strength &#128170</p>
+                </div>
+                <div class="column4">
+                  <input class="checkbox" type="checkbox" id="cbox3" value="mission1" onclick="confettiCheck()">
+                </div>
               </div>
-              <div class="column2">
-                <p class="title"><b>Drink Water</b></p>
-                <p class="description">Take at least 3 gallons of water during the day</p>
-              </div>
-              <div class="column3">
-                <p class="defense" value="15">+15 def &#128737</p>
-                <p class="strength" value="2">+2 strength &#128170</p>
-              </div>
-              <div class="column4">
-               <input class="checkbox" type="checkbox" id="cbox4" value="mission1" onclick="confettiCheck()">
-              </div>
-            </div>
-              </label>
+            </label>
           </div>
 
           <div class="mission" id="mission">
             <label>
-            <div class="row">
-              <div class="column1">
-                <span class="emoji">&#128054</span>
+              <div class="row">
+                <div class="column1">
+                  <span class="emoji">&#127817</span>
+                </div>
+                <div class="column2">
+                  <p class="title"><b>Drink Water</b></p>
+                  <p class="description">Take at least 3 gallons of water during the day</p>
+                </div>
+                <div class="column3">
+                  <p class="defense" value="15">+15 def &#128737</p>
+                  <p class="strength" value="2">+2 strength &#128170</p>
+                </div>
+                <div class="column4">
+                  <input class="checkbox" type="checkbox" id="cbox4" value="mission1" onclick="confettiCheck()">
+                </div>
               </div>
-              <div class="column2">
-                <p class="title"><b>Drink Water</b></p>
-                <p class="description">Take at least 3 gallons of water during the day</p>
+            </label>
+          </div>
+
+          <div class="mission" id="mission">
+            <label>
+              <div class="row">
+                <div class="column1">
+                  <span class="emoji">&#128054</span>
+                </div>
+                <div class="column2">
+                  <p class="title"><b>Drink Water</b></p>
+                  <p class="description">Take at least 3 gallons of water during the day</p>
+                </div>
+                <div class="column3">
+                  <p class="defense" value="15">+15 def &#128737</p>
+                  <p class="strength" value="2">+2 strength &#128170</p>
+                </div>
+                <div class="column4">
+                  <input class="checkbox" type="checkbox" id="cbox5" value="mission1" onclick="confettiCheck()">
+                </div>
               </div>
-              <div class="column3">
-                <p class="defense" value="15">+15 def &#128737</p>
-                <p class="strength" value="2">+2 strength &#128170</p>
-              </div>
-              <div class="column4">
-               <input class="checkbox" type="checkbox" id="cbox5" value="mission1" onclick="confettiCheck()">
-              </div>
-            </div>
-              </label>
+            </label>
           </div>
 
 
-          
+
         </div>
       </div>
       <div class="column">
@@ -160,7 +164,7 @@
 
 
           <div class="level">
-            <h5 class="ltitle">Level 2</h5>
+            <h5 class="ltitle">Level <span id="levelNumber"></span></h5>
           </div>
 
           <div class="stats-bar">
@@ -218,49 +222,27 @@
       }
 
     </script>
-    
+
     <script>
 
-      function confettiCheck() {
-        c1 = document.getElementById('cbox1');
-        c2 = document.getElementById('cbox2');
-        c3 = document.getElementById('cbox3');
-        c4 = document.getElementById('cbox4');
-        c5 = document.getElementById('cbox5');
-        
-        if (c1.checked == true){
-          if (c2.checked == true){
-            if (c3.checked == true){
-              if (c4.checked == true){
-                if (c5.checked == true){
-                  start();
-                  stop();
-                  console.log("all checked")
-                }
-              }  
-            }
-          }
-        }
+      // for starting the confetti 
+      const start = () => {
+        setTimeout(function () {
+          confetti.start()
+        }, 1000); // 1000 is time that after 1 second start the confetti ( 1000 = 1 sec)
+        let beat = new Audio('audio/congrats.mp3');
+        beat.play();
       };
-      
-        // for starting the confetti 
-        const start = () => {
-            setTimeout(function() {
-                confetti.start()
-            }, 1000); // 1000 is time that after 1 second start the confetti ( 1000 = 1 sec)
-            let beat = new Audio('audio/congrats.mp3');
-            beat.play();
-        };
 
-        //  for stopping the confetti 
+      //  for stopping the confetti 
 
-        const stop = () => {
-            setTimeout(function() {
-                confetti.stop()
-            }, 3000); // 5000 is time that after 5 second stop the confetti ( 5000 = 5 sec)
-        };
-        
-        
+      const stop = () => {
+        setTimeout(function () {
+          confetti.stop()
+        }, 3000); // 5000 is time that after 5 second stop the confetti ( 5000 = 5 sec)
+      };
+
+
 
     </script>
 

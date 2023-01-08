@@ -1,4 +1,6 @@
 const chatGPT = require("chatgpt-io");
+const { ChatGPTClient } = require('unofficial-chatgpt-api');
+//const chatGPT = require('chatgpt')
 const Realm = require("realm-web")
 var sha256 = require('js-sha256');
 const emailjs = require('@emailjs/browser')
@@ -125,15 +127,21 @@ async function getMissions() {
   //
   if (last.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
-    let bot = new chatGPT("eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..y1ZLNmWfniYI8FZg.kSwZ0XrJJItPfxvAuh9op7KXfVdAQIL2uWSaN3aCD5w0ilEqhYuJOa1BTLCBrRzFwAndy7tSrp0i217iFO731I4sYMj-OiD6YOwMD2xsIM37xtAMQzCfAknTLOIPxVU4S8Nos1brMVorxkUV1_P-b96oAKZPadTwWD3-atpVnB2no12s8dfUBULzvhgD_xw2dUA_Ibaampi-WgvScRNfFkGNwRH5n560EioLAlIeOKTNab-HEEzc6jYVTHMP_vPSp4Q_aJYiu7ehRu7PSg06KP9qQKaOG8NxJ_tlNejlD17wGCZJ5wzElyFvKFNXcHMq9oxoDg_yogkgOas0ST3djNlFCbwd4_GbtIRwcaz8XtT59tCv9UdjOtZPqSsT5mh5XUBNBLP29ZsOknyniuUtrKFjdLte9Jl-avYlgCoFHpzx9_cVOx-NixCl3Bq83jdOHh2Lp3eBh_1iIlQvcG9i64ugf61obEMYkuamqkQUOltpRZqHqxm7W4Jj6rk6yN91sB_8WJzJch4zPoI8m6ALl94A8D4c3QiQKSi7icHZjuNAY5AB7LIV7Dnm-vzX1hWCaLCUSjnY6REBZNbu9JOLb1co3Xp2zO_-jlYjqvzLPXUYFG0T-xvAM6wiiRgsFxVY8Xq_lTmyVhyE8X1EmFlBL38YZR_GDalR3zKHGar_lUKUPRBsrBxzI1STdFaG2IPLOOSSrJu7PezPXXZu675jSrPeL6y09owMh_hdqdEywy01qmG67y6MJcpBimjqUnYsIDk5hpHSuWAFWcNCXkwh4iMC4tHKzCGjmL5tX-oG4myScEz3YYIBgIAUc6K7HPTY_n-yNBOm3j1T3NnytfMA63hUygKveNkbTAm0hr7KhL7bmIqjKvS1ISLhji2mQ7bWq18RA3wz6U3B4cWGfsK0WI6H3BMR39p_JjJ5n4Qd9C0L5dHA07Jd1-1Jz7eq0G0Tny8kZoXBa2KSMpKlHMH2l68Xrz3pCZHs-GVYz3pOklAyo2zd_5XlyuyMZeMdzdOR7j627FEBDh6L1SMHnSZjAL9izejpC1X7GOlT-_ZazC9ZBdhQa-9-gFH8BZJiQRnZubemjoeRHiSJphgxEV0W_Qx87Bnh-62dg8jCxWtdl-7qJzHH0AgASuCvkUoJUQMm8oLKuwWbwBOeYDw5MDp7OSLMHBcL6a2heROihM65YdxI2w240KWev7-U-tQrFlwvAUEcIxgxvOFE1HUk7QXJ3zQe09kT_WXI8QzlcrQ0gISpfEXcJU9-LCcB3mE2qSUDBDbnnHps2OWhUpxarYSU8Ddyj8gBHfvC9s0qzmoDW_OzY1ApmABYa1y2-8arYVAJTJUCeROlLOeCB92Q9XTZ4U3HC6N1lQBKZ2tZK3MPJ8N_3LyxDx-mYsoVJiXywaA4NmzqI0HVVYkHgd-SuJulYzb3GG6OuUigxqOUk5nWrYGyv2C4raw2knNP1aRaGvFvsmLcoPFAxAlqpPzhSlBmLtk7X6iVTIg-Q3XKn4zmNOKsEf6kOLQyDquPFQkOoG_W0FaQ831RPqVomWlzjkCBfNv9xMQKkxJ7_Y9zlJMFuUznlZxckMVACiulp4WCwW8QTC7L-aDa094IdnYaZaQjq7Bhsu3t5ojlm3io47dm3q-yUiPPPeloLr83WcGGdBLAtWrqEIXdjpGWjO51KPAzObrjh14BmpzRqYXYbYd_36VNfOmXE6q5PQTpm_NcbDVeXUMKaEltWTSuO_ypmEe0x007DYH83n_UelPKNc7AHizaMTwh3AQ3OS2fOzPlITuAzLM69DnSpfU19_CYo6TZOVE-eOugPtUa3tm9eRX9U9Gh2npt8v770RxIDBHZHQpG-P1pXNPGeT4q6GXZDukdLhcKed-r_sFgWWVXJ0TVxlkvHDmFX-9nDyYbG9fJqHbg19R1vR1-Ey1DNMMowssrYbVWfWj-jlzKRBYLZLOQLSkZ3FHbHrDo86ErkNSxIzx97gdiJ7J4vvFNwoE-bVl--_CRKf2eLAjJ_Ry7INvR5BQV7MEpzltziTW-FS8cwbwRaFdReg32JPnpViiAS1WA6mKu2pNplZh4UcljRGUT5c6goGPo-A93SEmHZiWJG8MKKT7C99IKZbVBjcsiZ5CiSxeoAR8-UTAwno4ggs2T-GEHX8GE4zvTQUtic962ou33CDv5IjeP3eNJjcYSUTg10TmZG57ncRomvBFESz8E4tATIiV9oh6ebn_YKXJqW7GbcaglgI0StZAEeS1DWBx78WdsJNlpJg7qwBYALCIEGDYYdAeguGQhcmDjQCbDKbdxc2utoYBQ408_GJmtn8D2psk6SoNZXum63LobYCUx92AeIQ.b2zPSzvmSdUpMR-r7qgB4A");
-    await bot.waitForReady()
+    // let bot = new chatGPT("no");
+    // await bot.waitForReady()
 
-    data = await bot.ask("write this data into a json object: write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, also write a stat for each of them upgrading their parent category by a number under 20. Then write all the values into a json object using only the values: name, category, upgrade")
+    const gpt = new ChatGPTClient({
+      clearanceToken: '.NFxnQSCspWK.QH8qcE2aXZvLTXqL6yJeo6O6lajbW0-1673184210-0-1-6ed987fe.4165c997.69e48cb6-250',
+      sessionToken0: 'eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..P11kfRBor2GvVCv1.hRzqYYT964BxP5_lTgBi45ykospJJuFvd_9ZD4dwIMaD8ijXmOWec50Sar-JBGidoYeNltIPSUJ92WovhOlqfj3x6r7RE_7qmfOtVOCRpbqboRG7j3DUk2TiD92OiBcIUjYgaDR-9H7rk6B_IZD27DwTFgUuMQms8qWAwlVCtw_O0PEm0_Qhq52P7YDWwbbSKVirvRetzjqLHuTllKewhL7AOYmr4vZ-f5Lfn5PIbToekCUBoS_xvVQqRjWuZUl_jJpe4vFjyjnhew02TxvxefVs6cecpnigwvQ2CwJ7fJRfudb8g4HmAntLuiR5hayrNIVgOvymGb-4BK7PCQZ58sOpK96s4lAC9wXINm935Fpl1C58eVDrCjOezcNQk7Nrj9ra4Su_TRpOhBSNUnKElmP0c_oNiUae_ftPL13sQulpCG3LxxaVmkZFkgGsiMaJIWv6BLNlX5lqnnuhp1Xqcvh4iIOvk02aoLsDN8oyz9caC97uUi19ZwLF6jRrS3-pwMRWro0Y9n362sggI_GnYJSLguyqZSWXsIDaTGqK7cK3nWswuVEueCL4xH867d6Erw_LUvDMArs-rSM_EERqAnbK9caJVpk2aNOmz8DsnH_gluv95vo9BaJap0oMKC6v8EwrN1AvVny7hQjpiXUcyTSGep8ei42R1EtaXWcSJ5khj1De1hdWAp9DaulWBTaCZ6Xqs3RQTeBKqp_owxqWuwOEDQoekV-qCimHHjd1i_omiwNVSAAjEDPPky8SMynUNfsNfS4ECOWQOMLl6HWxIXEb3kXmDsRyXkNsTw6O6b1hhBFuNa2MhRiAmL8wTPXi5D_DcjSWbe7aUopGNFuucuejYaXYEPAXKkCHljwH2Tu0iXVeZ1jq32c5QfQ7Z3PC6lmhN5XO9C1rd2fQCgec6MMNKWubzTNmR6BOdjhHgicaJofb92p3swHttTfHn7t54P642tpfBd05k0xZHfMnrwRzQcIZkYuLqwRk7spbhPBl5_tbut0LQlWNuRRLgvfRm_naS19XZtAeNwfN2bL8L1Kn6GONIG-8jDH63ntc5CDJkx32rZlzQH6Aw3-NTjSEn7dvsyKeLRSpPlj6ng1LVx8G6aKb5-3qpN8nNMPc9ecoRd56t58EFTFVMT4eSVmd14kAgsw6HKyOdEgEbjtjl2XgUmSPwbsOWHtYtDgnupSiVcVAuPDnl6MMTbgTgqKBtj26nCowOn_LRyaohrPW2badh1OsUHha39ALDWQueOT1HPlVd0jIyqj_heUTBN_jUEOX1MN3036p77YdJE7zi0Ea4LP_CKlsKHXKASV9MBcBRJGJQb52prCt36gowAvQeW5L2gFlOhNmV1ZT_K4NtEQSXJnZmFrAjilwGc0Ta9Ko_UptWEHXS3QJ_AJNRVHNoFWRF_diy_88zwE08gssU4LFAJIP8fUeEPO8RlbdjsPUlUEtTmknfx0ID1EudPMSpe7nIAHbqxTw9h_YO4-onmeAMcb5SotZ3wZrX2FK3eIbow-Hc1tKGgha4beXHECsjPEBy3DmSQX4291IrGw9Nesyu1iXM1WR1iAT3gIrG-8R1mEoM2jAKA1_IQexouMNVqYJN2ZVPliZUr5Y5vKs4r9jfjhBOT_0xh2LJ2zSRRpATZPvbe-7ebh9TUueS_3ovY3r9SNjeRe6I4Izixsx8EpcxZ8PwQ5I_lQ3bxwm9ObZXZZ9cw7lF3rXwJ30pGAHdV2iwzK5MyYsTPgfummEIyFvEUl1Vniw_e3ELrvhM4-KTrVX3jrQWYyWj6CCVHYKWlvD0b44ZvKCUIU4qP1q7oF9bp2AR4w3I2oIT0foYbktiidMSN9pH1MfLoagp_nMwpSGee0t8KiGx4NcYLwvPJ9mWdFUaP8LZOC49fBM4fCfeZUkQ3UwHW4SfSzm6iuo_iccYxNgbB08e0iK6feaxLMfCl8SvLoCAJaAenj_v0lD1w0EDvKMEe9A5W7298-kB9W74Y69bVcdK-UKrdBThPc1e-Wj38ISOyxwcUNNfMHbJ-2-ZXKauRCyTXBQSdFz94Wq0enSKBluIwuvyXepM03BLbXDxDeZKWdeq4Ox7Cw36WRgQ-P_aJWELxkcrMrVo8AVAndlfmp6dk0jXdygS6TAEEapu0a-MoJ3diyOfMU4bhHCEjdg_DMIXfueDxoU0lCI4hDClRkPF6DB074H5E-Q9Ar196c7joBXVQn15lTA5BMzGp149pcpRwabse1y-8Vv5GhTksmahKN6C5HqGVCHJQSwvg.pnZgp1740HSAYRwWKsDIEA',
+    });
+    const convo = await gpt.startConversation()
+    const data = await convo.chat("write this data into a json object: write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, also write a stat for each of them upgrading their parent category by a number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade")
+    await console.log(`Before: ${data}`)
     try {
       data = JSON.parse(data.split('```')[1])
-      console.log(data)
+      console.log(`After: ${data}`)
       collection.insertOne({ missionList: data, time: (Date.now() / 1000) })
-    } catch (e) { console.log(e); return await getMissions() }
+    } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions() }
     updateMissions()
   }
 }
@@ -142,41 +150,51 @@ async function updateMissions() {
   //TODO
 }
 
- async function textboxColor() {
+async function textboxColor() {
   var elements = document.querySelectorAll('.mission-board');
-   for (let i of elements) { 
-     console.log(i)
-   }
+  for (let i of elements) {
+    console.log(i)
+  }
   // if (checkBox.checked == true){
   //   text.style.background-color = "#1e0656";
   // }
   //  else{
-     
+
   //  }
 }
 
-async function confettiCheck(){
-        c1 = document.getElementById('cbox1');
-        c2 = document.getElementById('cbox2');
-        c3 = document.getElementById('cbox3');
-        c4 = document.getElementById('cbox4');
-        c5 = document.getElementById('cbox5');
-
-        
-        if (c1.checked == true){
-          if (c2.checked == true){
-            if (c3.checked == true){
-              if (c4.checked == true){
-                if (c5.checked == true){
-                  start();
-                  stop();
-                  console.log("all checked")
-                }
-              }  
-            }
-          }
-        }
+async function confettiCheck() {
+  var missionCheckboxes = document.querySelectorAll('.mission .checkbox');
+  for (var i = 0; i < missionCheckboxes.length; i++) {
+    if (!missionCheckboxes[i].checked) {
+      return false;
+    }
+  }
+  return true;
 }
+
+var r = document.querySelector(':root');
+
+function changeXP() {
+  var strengthXP = '40%';
+  var defenseXP = '4%';
+  var intelligenceXP = '4%';
+  var overallXP = '45%';
+ 
+  r.style.setProperty('--strengthBar', strengthXP);
+  r.style.setProperty('--defenseBar', defenseXP);
+  r.style.setProperty('--intelligenceBar', intelligenceXP);
+  r.style.setProperty('--overallBar', overallXP);
+  console.log("stats changed")
+};
+
+var userLevel = 1;
+function changeLevel() {
+  level = document.getElementById('levelNumber');
+  level.innerHTML = userLevel;
+  console.log("lvl changed")
+};
+
 
 window.getCookie = getCookie
 window.updateProfile = updateProfile
@@ -184,6 +202,8 @@ window.login = login
 window.signup = signup
 window.setName = setName
 window.setPfp = setPfp
+window.changeXP = changeXP
+window.changeLevel = changeLevel
 
 window.onload = async function() {
   mongoU = await app.logIn(credentials)
@@ -198,11 +218,13 @@ window.onload = async function() {
     user.onclick = async function() { await setName() };
     document.getElementById("files").onclick = async function() { await setPfp() }
     document.getElementById("logoutBtn").onclick = async function() { await logout() }
-    
-    document.getElementById("cbox1").onclick = async function() { await confettiCheck() }
-    
+    changeXP();
+    changeLevel();
     await getMissions()
+    document.getElementById("cbox1").onclick = async function() { await confettiCheck() }
+
+
   }
   //here 
-  
+
 }
