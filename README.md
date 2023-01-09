@@ -37,6 +37,7 @@ This project taught us a lot about how webpages and real life applications use a
 We are proud that this idea that we had on our minds was actually successful. We are very proud that our teamwork helped us having this project on time! That deadline extension really saved us tho.
 
 ![song.png](https://media.giphy.com/media/dWOKEQ5ewh94RJLemj/giphy.gif)
+
 W3Schools offers free online tutorials, references and exercises in all the major languages of the web. Covering popular subjects like HTML, CSS, JavaScript, Python, SQL, Java, and many, many more.
 Image
 EmailJS
