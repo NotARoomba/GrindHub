@@ -25,8 +25,8 @@ Research is the key to empathizing with users: we found our specific user group 
 - HTML Forms : https://www.w3schools.com/html/html_forms.asp
 - Email JS: https://www.emailjs.com/docs/
 - MongoDB: https://www.mongodb.com/docs/atlas/ 
--Credits to TokyoWeb for the CSS squares tutorial! https://codepen.io/tokyoweb
--Credits to this guy for the CSS confetti tutorial! https://dev.to/official_fire/creating-a-confetti-effect-in-5-minutes-16h3
+- Credits to TokyoWeb for the CSS squares tutorial! https://codepen.io/tokyoweb
+- Credits to this guy for the CSS confetti tutorial! https://dev.to/official_fire/creating-a-confetti-effect-in-5-minutes-16h3
 
 ## Challenges we ran into 😤
 
