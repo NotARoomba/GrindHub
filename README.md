@@ -8,7 +8,7 @@ You have probably made a list of resolutions and new habits that you want to car
 ## What it does 🤔
 
 Have you had a hard time trying to accomplish any goal in life? GrindHub will help you turn your procrastination into your habits! We built an intuitive platform where you can challenge yourself and do different daily missions and receive rewards, that will help you increase your level! Using GrindHub will be fun and rewarding at the end of the year.
-![dI.png](https://i.postimg.cc/855VbTzh/Captura-de-pantalla-20230108-181909.png)
+![dI.png](https://i.imgur.com/OU6cacr.gif)
 
 
 
@@ -61,4 +61,3 @@ We want to implement more skills and different rewards.
 
 ![song.png](https://media.giphy.com/media/B7o99rIuystY4/giphy.gif)
 ![desco.png](https://i.postimg.cc/YSvrrWnc/breaker.png)
-Image
