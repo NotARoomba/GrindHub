@@ -3,7 +3,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;900&family=Roboto:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;900&family=Roboto:ital,wght@0,300;0,400;1,400&display=swap"
+  rel="stylesheet">
 
 
 <head>
@@ -17,63 +21,63 @@
 
 <body class="body2">
   <div class="context">
-  <header>
-    <table>
-      <tr>
-        <td>
-          <h1 style="font-weight: 500;">
-            Welcome to
-          </h1>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <img class="logoimg" src="/img/3500d3-1.png" width="310" height="57">
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <h3>A magic checklist that actually works</h3>
-        </td>
-      </tr>
-    </table>
-  </header>
-       <div class="area" >
-            <ul class="circles">
-                    <li onclick="rick()"></li>
-                    <li></li>
-                    <li onclick="rick()"></li>
-                    <li></li>
-                    <li></li>
-                    <li onclick="rick()"></li>
-                    <li></li>
-                    <li></li>
-                    <li onclick="rick()"></li>
-                    <li></li>
-            </ul>
-    </div >
+    <header>
+      <table>
+        <tr>
+          <td>
+            <h1 style="font-weight: 500;">
+              Welcome to
+            </h1>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img class="logoimg" src="/img/3500d3-1.png" width="310" height="57">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h3>A magic checklist that actually works</h3>
+          </td>
+        </tr>
+      </table>
+    </header>
+    <div class="area">
+      <ul class="circles">
+        <li onclick="rick()"></li>
+        <li></li>
+        <li onclick="rick()"></li>
+        <li></li>
+        <li></li>
+        <li onclick="rick()"></li>
+        <li></li>
+        <li></li>
+        <li onclick="rick()"></li>
+        <li></li>
+      </ul>
+    </div>
 
-  <div class="container">
+    <div class="container">
 
-    <h3 class="underline"><b>Log In</b></h3>
-    <label for="loginKey">Secret Key</label><br>
-    <input type="text" placeholder="" id="loginKey" required><br><br>
+      <h3 class="underline"><b>Log In</b></h3>
+      <label for="loginKey">Secret Key</label><br>
+      <input type="text" placeholder="" id="loginKey" required><br><br>
 
-    <button id="loginBtn"><b>Login</b></button><br>
-    <p>Don't have an account? <span style="color:#CF6679;"><a href="signup.html">Sign up</a></span></p>
+      <button id="loginBtn"><b>Login</b></button><br>
+      <p>Don't have an account? <span style="color:#CF6679;"><a href="signup.html">Sign up</a></span></p>
 
-  </div>
+    </div>
 
-  <script>
-    if (getCookie("userKey")) {
-      window.location.replace("https://grindhub.notanaperture.repl.co/dashboard.html")
-    }
+    <script>
+      if (getCookie("userKey")) {
+        window.location.href("dashboard.html")
+      }
 
-    function rick(){
-      window.open("https://youtu.be/dQw4w9WgXcQ")
-    }
+      function rick() {
+        window.open("https://youtu.be/dQw4w9WgXcQ")
+      }
 
-  </script>
+    </script>
   </div>
 </body>
 
