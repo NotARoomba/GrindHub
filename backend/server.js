@@ -18,7 +18,7 @@ const cors = require('cors')
 const app = express()
 
 app.use(cors({
-  origin: '*'
+  origin: 'https://grindhub.notaroomba.xyz'
 }))
 app.use(bodyParser.json())
 
