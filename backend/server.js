@@ -47,7 +47,9 @@ function sendMail(email, subject, message) {
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
-
+app.post('/', async (req, res) => {
+  res.send("Hey you're not supposed to be here!")
+})
 app.post('/user', async (req, res) => {
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
