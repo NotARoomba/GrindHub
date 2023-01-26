@@ -29,7 +29,7 @@ var corsOptions = {
   }
 }
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
 app.use(bodyParser.json())
 
 function sendMail(email, subject, message) {
