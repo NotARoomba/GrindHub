@@ -1,11 +1,5 @@
-const chatGPT = require('chatgpt-io')
-const Realm = require("realm-web")
-var sha256 = require('js-sha256');
-const emailjs = require('@emailjs/browser')
-emailjs.init('986q4ISluWrl7RTE8');
-const app = new Realm.App({ id: (function() { var E = Array.prototype.slice.call(arguments), r = E.shift(); return E.reverse().map(function(S, h) { return String.fromCharCode(S - r - 42 - h) }).join('') })(51, 206, 200, 208, 196) + (485).toString(36).toLowerCase() + (function() { var p = Array.prototype.slice.call(arguments), w = p.shift(); return p.reverse().map(function(t, X) { return String.fromCharCode(t - w - 8 - X) }).join('') })(15, 122, 122, 140) + (925).toString(36).toLowerCase() + (function() { var H = Array.prototype.slice.call(arguments), z = H.shift(); return H.reverse().map(function(h, v) { return String.fromCharCode(h - z - 3 - v) }).join('') })(40, 166, 166, 145, 146, 88) + (28).toString(36).toLowerCase() });
-const credentials = Realm.Credentials.anonymous();
-let mongo = null
+const superagent = require('superagent')
+const BACKEND_URL = "https://localhost:3000"
 
 
 
@@ -24,36 +18,22 @@ function getCookie(key) {
 async function login() {
   input = document.getElementById("loginKey").value
   if (!input) return alert("Enter your private key!")
-  const collection = await mongo.db("userData").collection("users");
-  data = await collection.findOne({ key: input })
+  let data = await (await superagent.post(BACKEND_URL + "/user")).send({ key: input }).data.json()
   if (data == null) {
     return alert("The account attached to this key does not exist")
   }
   else {
     setCookie("userKey", data.key)
-    window.location.replace("https://grindhub.notanaperture.repl.co/dashboard.html")
+    window.location.href("dashboard.html")
   }
 }
 
-function sendMail(email, subject, message) {
-  emailjs.send('GrindHub', 'template_cpoi5e7', { email: email, subject: subject, message: message })
-    .then(function(response) {
-      console.log('SUCCESS!', response.status, response.text);
-      return 0
-    }, function(error) {
-      console.log('FAILED...', error);
-      return 1
-    });
-  return 0
-}
-
 async function signup() {
-  const collection = mongo.db("userData").collection("users");
   email = document.getElementById("signupEmail").value
   if (!email || !(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email))) return alert("Enter a valid email!")
   try {
     while (true) {
-      let user = await collection.findOne({ email: email })
+      let user = await superagent.post(BACKEND_URL + "/user").send({ email: email }).data.json()
       if (!user) break;
       else if (email == user.email) alert("That email is taken!")
       else break;
@@ -63,22 +43,24 @@ async function signup() {
     alert("An error occured! Please try again!")
   }
   code = `${Math.floor(100000 + Math.random() * 900000)}`
-  if (sendMail(email, "Verification Email", "Your code is: " + code) == 0) {
+  if (await superagent.post(BACKEND_URL + "/email").send({email: email, subject: "Verification Email", message: ("Your code is: " + code)}) == 0) {
     check = prompt("Please enter the code sent to your email: " + email, "000000");
     if (code != check) return alert("Please try again! Your code did not match the one sent to your email!")
   }
   try {
     while (true) {
       let name = prompt("What would you like your username to be?");
-      let user = await collection.findOne({ name: name })
+      let user = await superagent.post(BACKEND_URL + "/user").send({ name: name }).data.json()
       if (!user) break;
       else if (name == user.name) alert("That username is taken!")
       else break;
     }
+    //set user data
     randomKeys = prompt("Enter some random letters and numbers for your key (sha256 hash).")
     alert(`Your secret key is '${sha256(randomKeys)}', please make sure that you copy this key for future login!'`)
-    await collection.insertOne({ key: sha256(randomKeys), email: email, name: name, image: null, strength: 0, defense: 0, intelligence: 0, hasRefreshed: false, completed: [] })
-    window.location.replace("https://grindhub.notanaperture.repl.co/")
+    //add a user
+    await superagent.post(BACKEND_URL + "/signup").send({ key: sha256(randomKeys), email: email, name: name, image: null, strength: 0, defense: 0, intelligence: 0, hasRefreshed: false, completed: [] }).data.json()
+    window.location.href("index.html")
   } catch (e) {
     console.log(e)
     alert("An error occured! Please try again!")
@@ -86,8 +68,7 @@ async function signup() {
 }
 
 async function updateProfile() {
-  const collection = await mongo.db("userData").collection("users");
-  user = await collection.findOne({ key: getCookie('userKey') })
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
   document.getElementById('username').textContent = (user.name == null ? user.email : user.name)
   document.getElementById('userPfp').src = (user.image == null ? './img/default.jpeg' : user.image)
   await changeXPandRank()
@@ -96,17 +77,16 @@ async function updateProfile() {
 }
 
 async function setName() {
-  const collection = mongo.db("userData").collection("users");
-  name = prompt("What do you want to set your username to?")
-  user = await collection.findOne({ name: name })
+  let name = prompt("What do you want to set your username to?")
+  let user = await superagent.post(BACKEND_URL + "/user").send({ name: name }).data.json()
   if (user != null && name == user.name) return alert("That username is taken!")
-  await collection.updateOne({ key: getCookie('userKey') }, { $set: { name: name } })
+  await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { name: name } })).data.json()
+  await collection.updateOne()
   updateProfile()
 }
 
 async function setPfp() {
   try {
-    const collection = await mongo.db("userData").collection("users");
     const inputFile = document.getElementById('files');
 
     await inputFile.addEventListener('change', async () => {
@@ -117,7 +97,8 @@ async function setPfp() {
 
         await reader.addEventListener('load', async () => {
           const base64 = reader.result;
-          await collection.updateOne({ key: getCookie('userKey') }, { $set: { image: base64 } })
+          //set user data
+          await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { image: base64 } }))
         });
 
         await reader.readAsDataURL(file);
@@ -130,13 +111,13 @@ async function logout() {
   doorSfx()
   if (confirm("Are you sure that you want to logout?")) {
     document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
-    window.location.replace("https://grindhub.notanaperture.repl.co/")
+    window.location.href("index.html")
   }
 }
 
 async function getMissions() {
-  const collection = await mongo.db("userData").collection("missions");
-  last = await collection.find({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })
+  //get mission
+  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).data.json()
   //
   if (last.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
@@ -150,17 +131,19 @@ async function getMissions() {
     let json = null
     try {
       json = JSON.parse(data)
-      console.log(`After: ${json}`)
-      collection.insertOne({ missionList: json, time: (Date.now() / 1000) })
+      //console.log(`After: ${json}`)
+      await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
     } catch (e) {
       try {
         json = JSON.parse(data.split('```')[1])
         console.log(`After: ${json}`)
-        collection.insertOne({ missionList: json, time: (Date.now() / 1000) })
+        //set data
+        await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
       } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions() }
-      const userCollection = await mongo.db("userData").collection("users").find().toArray()
+      const userCollection = await superagent.get(BACKEND_URL + "/users")
       for (let i in userCollection) {
-        await userCollection.updateOne({ key: i.key }, { $set: { hasRefreshed: false } })
+        //set user data
+        await superagent.post(BACKEND_URL + "/userupdate").send(({ key: i.key }, { $set: { hasRefreshed: false } }))
       }
       await updateMissions(false)
     }
@@ -168,16 +151,14 @@ async function getMissions() {
 }
 
 async function updateMissions(beenClicked) {
-  const collection = await mongo.db("userData").collection("missions");
-  const userCollection = await mongo.db("userData").collection("users");
-  if (beenClicked) await userCollection.updateOne({ key: getCookie('userKey') }, { $set: { hasRefreshed: true } })
-  missions = await collection.find({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })
-  if (missions.length == 0) missions = await collection.find({ time: { $lt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })
+  if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }))
+  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).data.json()
+  if (missions.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).data.json()
   missions = missions[0].missionList.missions
-  let user = await userCollection.findOne({ key: getCookie('userKey') })
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
   if (user.hasRefreshed == null) {
-    await userCollection.updateOne({ key: getCookie('userKey') }, { $set: { hasRefreshed: false } })
-    user = await userCollection.findOne({ key: getCookie('userKey') })
+    await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: false } }))
+    user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
   }
   const elements = document.getElementsByClassName("mission-board");
   let categories = ["defense", "strength", "intelligence"]
@@ -364,8 +345,7 @@ function findStatXpPerc(totalXP, next) {
 
 async function changeXPandRank() {
   var r = document.querySelector(':root');
-  const collection = await mongo.db("userData").collection("users");
-  user = await collection.findOne({ key: getCookie('userKey') })
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
   let strength = findStatXpPerc(user.strength, 10)
   let defense = findStatXpPerc(user.defense, 10)
   let intelligence = findStatXpPerc(user.intelligence, 10)
@@ -410,8 +390,6 @@ async function changeXPandRank() {
 
 async function missionComplete() {
   var missionCheckboxes = document.querySelectorAll('.mission .checkbox');
-  const collection = await mongo.db("userData").collection("users");
-  user = await collection.findOne({ key: getCookie('userKey') })
   //if one mission is checked, look at the XP it gives and add it to status bars and totalXP
   for (var i = 0; i < missionCheckboxes.length; i++) {
     if (missionCheckboxes[i].checked) {
@@ -419,7 +397,7 @@ async function missionComplete() {
       final = {}
       final[data[0].category] = data[0].upgrade
       final[data[1]] = Math.floor(data[0].upgrade / 2)
-      await collection.updateOne({ key: getCookie('userKey') }, { $inc: final, $push: { completed: data[0] } })
+      await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $inc: final, $push: { completed: data[0] } }))
       await updateProfile()
     }
   }
@@ -442,8 +420,6 @@ window.missionComplete = missionComplete
 window.rick = rick
 
 window.onload = async function() {
-  mongoU = await app.logIn(credentials)
-  mongo = await mongoU.mongoClient("mongodb-atlas")
   if (document.getElementById("chg-username") != null) (async function() { await updateProfile() })()
   sign = document.getElementById("signupBtn")
   if (sign != null) sign.onclick = async function() { await signup() };
@@ -456,6 +432,5 @@ window.onload = async function() {
     document.getElementById("logoutBtn").onclick = async function() { await logout() }
     await getMissions()
   }
-  //here 
 
 }
