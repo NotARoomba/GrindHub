@@ -18,14 +18,19 @@ const app = express()
 
 
 const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz'];
+ 
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
+app.use(cors(corsOptions));
 app.use(bodyParser.json())
-app.use(cors({
-  origin: ['https://grindhub.notaroomba.xyz'],
-  methods: ['GET', 'POST'],
-  credentials: true
-}));
-
 
 function sendMail(email, subject, message) {
   //send mail
@@ -51,24 +56,24 @@ function sendMail(email, subject, message) {
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
-app.get('/', async (req, res) => {
+app.get('/', cors(corsOptions), async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
-app.post('/user', async (req, res) => {
+app.post('/user',cors(corsOptions), async (req, res) => {
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   let user = await users.findOne(data)
   res.json(user);
 })
-app.post('/users', async (req, res) => {
+app.post('/users', cors(corsOptions), async (req, res) => {
   const users = mongo.db("userData").collection("users");
   res.json(await users.find().toArray());
 })
-app.post('/email', (req, res) => {
+app.post('/email',cors(corsOptions), (req, res) => {
     const data = JSON.parse(body);
     res.end(sendMail(data));
 })
-app.post('/signup',async (req, res) => {
+app.post('/signup',cors(corsOptions),async (req, res) => {
 const users = mongo.db("userData").collection("users");
     const data = JSON.parse(body);
     try {
@@ -79,12 +84,12 @@ const users = mongo.db("userData").collection("users");
       res.end(1);
     }
 }) 
-app.post('/missions',async (req, res) => {
+app.post('/missions',cors(corsOptions),async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
     const data = JSON.parse(req.body);
     res.end(await missions.find(data));
 })
-app.post('/missionsupdate',async (req, res) => {
+app.post('/missionsupdate',cors(corsOptions),async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
   const data = JSON.parse(req.body);
   try {
@@ -95,7 +100,7 @@ app.post('/missionsupdate',async (req, res) => {
     res.end(1);
   }
 })
-app.post('/userupdate',async  (req, res) => {
+app.post('/userupdate',cors(corsOptions),async  (req, res) => {
 const users = mongo.db("userData").collection("users");
     const data = JSON.parse(req.body);
     await userCollection.updateOne(data)
