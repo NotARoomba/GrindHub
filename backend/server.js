@@ -2,19 +2,17 @@ const url = require('url');
 const querystring = require('querystring');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
-let mongo = null;
-(async () => {
-  mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).catch((err) => {
-    console.log(err)
-});
-})()
 var sha256 = require('js-sha256');
 const emailjs = require('@emailjs/browser')
 emailjs.init(process.env.EMAILJS)
 const bodyParser = require('body-parser')
-
 const express = require('express')
 const cors = require('cors')
+
+(async () => {
+  const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).catch((err) => {
+    console.log(err)
+  })
 const app = express()
 
 app.use(cors())
@@ -116,3 +114,5 @@ const users = mongo.db("userData").collection("users");
 app.listen(3000, () => {
   console.log('Server listening on port 3000');
 })
+
+})()
