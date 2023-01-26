@@ -20,8 +20,13 @@ async function login() {
   input = document.getElementById("loginKey").value
   if (!input) return alert("Enter your private key!")
   console.log("LOGIN")
-  let data = await superagent.post(BACKEND_URL + "/user").send({ key: input }).then((res) => {
-    console.log(res.data.json())
+   //let data = await superagent.post(BACKEND_URL + "/user").send({ key: input }).then((res) => {
+  //  console.log(res.data.json())
+  //})
+  let data = fetch("BACKEND_URL" + "/user", {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: input })
   })
   console.log(data)
   if (data == null) {
