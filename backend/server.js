@@ -5,11 +5,12 @@ const { MongoClient } = require('mongodb');
 var sha256 = require('js-sha256');
 const emailjs = require('@emailjs/browser')
 emailjs.init(process.env.EMAILJS)
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser') 
 const express = require('express')
 const cors = require('cors')
 
-(async () => {
+
+async function main () {
   const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).catch((err) => {
     console.log(err)
   })
@@ -115,4 +116,6 @@ app.listen(3000, () => {
   console.log('Server listening on port 3000');
 })
 
-})()
+}
+
+main().then()
