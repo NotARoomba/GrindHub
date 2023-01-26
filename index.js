@@ -1,5 +1,5 @@
 const superagent = require('superagent')
-const BACKEND_URL = "https://grindhub-backend.onrender.com"
+const BACKEND_URL = "https://grindhub-api.notaroomba.xyz"
 
 
 
