@@ -19,7 +19,7 @@ async function login() {
   input = document.getElementById("loginKey").value
   if (!input) return alert("Enter your private key!")
   console.log("LOGIN")
-  let data = await (await superagent.post(BACKEND_URL + "/user")).send({ key: input }).data.json()
+  let data = await superagent.post(BACKEND_URL + "/user").send({ key: input }).data.json()
   console.log(data)
   if (data == null) {
     return alert("The account attached to this key does not exist")
