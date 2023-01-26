@@ -60,6 +60,7 @@ app.get('/', cors(corsOptions), async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user',cors(corsOptions), async (req, res) => {
+  res.end({message: "HELLO"})
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   let user = await users.findOne(data)
@@ -108,7 +109,8 @@ const users = mongo.db("userData").collection("users");
 })
   
 // start the server
-app.listen(3000, () => {
+app.listen(3000, (err) => {
+  if (err) console.log("Error in server setup: " + err)
   console.log('Server listening on port 3000');
 })
 
