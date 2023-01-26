@@ -17,20 +17,14 @@ async function main () {
 const app = express()
 
 
-const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz'];
+const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz'];
 
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
 app.use(bodyParser.json())
+app.use(cors({
+  origin: ['https://grindhub.notaroomba.xyz'],
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 
 
 function sendMail(email, subject, message) {
@@ -58,35 +52,25 @@ function sendMail(email, subject, message) {
 //   next();
 // });
 app.get('/', async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user', async (req, res) => {
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   let user = await users.findOne(data)
-  res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.json(user);
 })
 app.post('/users', async (req, res) => {
   const users = mongo.db("userData").collection("users");
-  res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.json(await users.find().toArray());
 })
 app.post('/email', (req, res) => {
     const data = JSON.parse(body);
-    res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.end(sendMail(data));
 })
 app.post('/signup',async (req, res) => {
 const users = mongo.db("userData").collection("users");
     const data = JSON.parse(body);
-    res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     try {
       await users.insertOne(data)
       res.end(0);
@@ -98,15 +82,11 @@ const users = mongo.db("userData").collection("users");
 app.post('/missions',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
     const data = JSON.parse(req.body);
-    res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.end(await missions.find(data));
 })
 app.post('/missionsupdate',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
   const data = JSON.parse(req.body);
-  res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   try {
     await missions.insertOne(data)
     res.end(0);
@@ -119,8 +99,6 @@ app.post('/userupdate',async  (req, res) => {
 const users = mongo.db("userData").collection("users");
     const data = JSON.parse(req.body);
     await userCollection.updateOne(data)
-    res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.send(0)
 })
   
