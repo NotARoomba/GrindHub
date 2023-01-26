@@ -51,18 +51,21 @@ function sendMail(email, subject, message) {
 // app.use('/missionsupdate', cors());
 // app.use('/userupdate', cors());
 
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://notaroomba.xyz");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.get('/', cors(corsOptions), async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user',cors(corsOptions), async (req, res) => {
+  console.log("LOGIN")
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   let user = await users.findOne(data)
+  res.header("Access-Control-Allow-Origin", "https://notaroomba.xyz");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.json(user);
 })
 app.post('/users', cors(corsOptions), async (req, res) => {
