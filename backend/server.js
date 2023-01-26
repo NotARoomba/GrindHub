@@ -55,6 +55,7 @@ app.use(function(req, res, next) {
   console.log(req, res)
   res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  console.warn("aaaaaaaaa")
   next();
 });
 app.get('/', cors(corsOptions), async (req, res) => {
