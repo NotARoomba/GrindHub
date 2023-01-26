@@ -23,7 +23,7 @@ async function login() {
    //let data = await superagent.post(BACKEND_URL + "/user").send({ key: input }).then((res) => {
   //  console.log(res.data.json())
   //})
-  let data = fetch("BACKEND_URL" + "/user", {
+  let data = fetch(BACKEND_URL + "/user", {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key: input })
