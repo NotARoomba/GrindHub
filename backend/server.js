@@ -21,9 +21,9 @@ const allowedOrigins = ['*', 'http://localhost:3000', 'https://grindhub.notaroom
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (allowedOrigins.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+    corsOptions = { origin: true , optionsSuccessStatus: 200,preflightContinue:true} // reflect (enable) the requested origin in the CORS response
   } else {
-    corsOptions = { origin: false } // disable CORS for this request
+    corsOptions = { origin: false, optionsSuccessStatus: 200, preflightContinue:true } // disable CORS for this request
   }
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
