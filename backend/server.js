@@ -22,6 +22,7 @@ const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xy
 app.use(cors({
   origin: allowedOrigins,
   preflightContinue: true,
+  credentials: true
 }));
 app.use(bodyParser.json())
 
