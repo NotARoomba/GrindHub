@@ -17,7 +17,7 @@ async function main () {
 const app = express()
 
 
-const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz'];
+const allowedOrigins = ['*', 'http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz'];
 
 app.use(cors({
   origin: allowedOrigins
@@ -56,6 +56,7 @@ app.post('/user', async (req, res) => {
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   let user = await users.findOne(data)
+  res.header("Access-Control-Allow-Origin", "*")
   res.json(user);
 })
 app.post('/users', async (req, res) => {
