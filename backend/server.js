@@ -7,7 +7,8 @@ const emailjs = require('@emailjs/browser')
 emailjs.init(process.env.EMAILJS)
 const bodyParser = require('body-parser') 
 const express = require('express')
-const cors = require('cors')
+const cors = require('cors');
+const { error } = require('console');
 
 
 async function main () {
@@ -53,12 +54,15 @@ app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user', (req, res) => {
-  res.end({message: "HELLO"})
+  res.send({message: "HELLO"})
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   users.findOne(data).then(user => {
     res.header("Access-Control-Allow-Origin", "*")
     res.json(user);
+  }).catch(err => {
+    console.error(err)
+    res.send("aaaaaa")
   })
 })
 app.post('/users', async (req, res) => {
