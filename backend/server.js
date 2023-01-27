@@ -17,16 +17,12 @@ async function main () {
 const app = express()
 
 
-const allowedOrigins = ['*', 'http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz'];
-var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (allowedOrigins.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true , optionsSuccessStatus: 200,preflightContinue:true} // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false, optionsSuccessStatus: 200, preflightContinue:true } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
-}
+const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  preflightContinue: true,
+}));
 app.use(bodyParser.json())
 
 function sendMail(email, subject, message) {
@@ -56,7 +52,7 @@ function sendMail(email, subject, message) {
 app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
-app.post('/user', cors(corsOptionsDelegate), async (req, res) => {
+app.post('/user', async (req, res) => {
   res.end({message: "HELLO"})
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
