@@ -23,19 +23,20 @@ async function login() {
    //let data = await superagent.post(BACKEND_URL + "/user").send({ key: input }).then((res) => {
   //  console.log(res.data.json())
   //})
-  let data = fetch(BACKEND_URL + "/user", {
+  fetch(BACKEND_URL + "/user", {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key: input })
+  }).then(data => {
+    console.log(data)
+    if (data == null) {
+      return alert("The account attached to this key does not exist")
+    }
+    else {
+      setCookie("userKey", data.key)
+      window.location.href("dashboard.html")
+    }
   })
-  console.log(data)
-  if (data == null) {
-    return alert("The account attached to this key does not exist")
-  }
-  else {
-    setCookie("userKey", data.key)
-    window.location.href("dashboard.html")
-  }
 }
 
 async function signup() {
