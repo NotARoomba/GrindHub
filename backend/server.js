@@ -17,7 +17,7 @@ async function main () {
 const app = express()
 
 
-const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz'];
+const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz', 'http://grindhub.notaroomba.xyz'];
 
 app.use(cors({
   origin: allowedOrigins,
