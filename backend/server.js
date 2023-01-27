@@ -52,13 +52,14 @@ function sendMail(email, subject, message) {
 app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
-app.post('/user', async (req, res) => {
+app.post('/user', (req, res) => {
   res.end({message: "HELLO"})
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
-  let user = await users.findOne(data)
-  res.header("Access-Control-Allow-Origin", "*")
-  res.json(user);
+  users.findOne(data).then(user => {
+    res.header("Access-Control-Allow-Origin", "*")
+    res.json(user);
+  })
 })
 app.post('/users', async (req, res) => {
   const users = mongo.db("userData").collection("users");
