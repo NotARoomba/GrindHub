@@ -54,24 +54,14 @@ function sendMail(email, subject, message) {
     });
   return 0
 }
-// app.use('/user', cors());
-// app.use('/users', cors());
-// app.use('/signup', cors());
-// app.use('/missions', cors());
-// app.use('/missionsupdate', cors());
-// app.use('/userupdate', cors());
 
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "https://grindhub.notaroomba.xyz");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
 app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user', (req, res) => {
   logger.info("USER ENDPOINT PINGED")
   const users = mongo.db("userData").collection("users");
+  logger.info(req)
   const data = JSON.parse(req.body);
   users.findOne(data).then(user => {
     res.send(user);
@@ -130,6 +120,7 @@ app.listen(3001, (err) => {
 })
   }).catch((err) => {
     console.log(err)
+    logger.error(err)
 })
 }
 
