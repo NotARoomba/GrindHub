@@ -17,6 +17,7 @@
     "puppeteer": "^19.4.1",
     "querystring": "^0.2.1",
     "requests": "^0.3.0",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "winston": "^3.8.2"
   }
 }

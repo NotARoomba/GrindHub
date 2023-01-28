@@ -9,9 +9,16 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const cors = require('cors');
 const { error } = require('console');
+var winston = require('winston');
 
 
 function main () {
+  const logger = winston.createLogger({
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({ filename: 'combined.log' })
+    ]
+  });
   MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).then(mongo => {
 
 const app = express()
@@ -53,12 +60,14 @@ app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user', (req, res) => {
+  logger.info("USER ENDPOINT PINGED")
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   users.findOne(data).then(user => {
     res.send(user);
   }).catch(err => {
     console.error(err)
+    logger.error(err)
     res.send(err)
   })
 })
