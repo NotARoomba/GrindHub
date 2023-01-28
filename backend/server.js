@@ -57,7 +57,7 @@ app.post('/user', (req, res) => {
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   users.findOne(data).then(user => {
-    res.json(user);
+    res.send(user);
   }).catch(err => {
     console.error(err)
     res.send(err)
