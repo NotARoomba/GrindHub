@@ -40,7 +40,6 @@ app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
-app.use(bodyParser.json())
 
 function sendMail(email, subject, message) {
   //send mail
