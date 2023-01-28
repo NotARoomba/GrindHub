@@ -70,9 +70,9 @@ async function signup() {
 }
 
 async function updateProfile() {
-  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
-  document.getElementById('username').textContent = (user.name == null ? user.email : user.name)
-  document.getElementById('userPfp').src = (user.image == null ? './img/default.jpeg' : user.image)
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
+  document.getElementById('username').textContent = (user.body.name == null ? user.email : user.body.name)
+  document.getElementById('userPfp').src = (user.body.image == null ? './img/default.jpeg' : user.body.image)
   await changeXPandRank()
   await updateMissions(false)
 
@@ -80,9 +80,9 @@ async function updateProfile() {
 
 async function setName() {
   let name = prompt("What do you want to set your username to?")
-  let user = await superagent.post(BACKEND_URL + "/user").send({ name: name }).body
-  if (user != null && name == user.name) return alert("That username is taken!")
-  await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { name: name } })).body
+  let user = await superagent.post(BACKEND_URL + "/user").send({ name: name })
+  if (user.body != null && user.text!="" && name == user.body.name) return alert("That username is taken!")
+  await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { name: name } }))
   await collection.updateOne()
   updateProfile()
 }
@@ -119,9 +119,9 @@ async function logout() {
 
 async function getMissions() {
   //get mission
-  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).body
+  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, }))
   //
-  if (last.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
+  if (last.body.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
     // let bot = new chatGPT("no");
     //await bot.waitForReady()
@@ -143,7 +143,7 @@ async function getMissions() {
         await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
       } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions() }
       const userCollection = await superagent.get(BACKEND_URL + "/users")
-      for (let i in userCollection) {
+      for (let i in userCollection.body) {
         //set user data
         await superagent.post(BACKEND_URL + "/userupdate").send(({ key: i.key }, { $set: { hasRefreshed: false } }))
       }
@@ -154,13 +154,13 @@ async function getMissions() {
 
 async function updateMissions(beenClicked) {
   if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }))
-  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).body
-  if (missions.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).body
-  missions = missions[0].missionList.missions
-  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
-  if (user.hasRefreshed == null) {
+  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, }))
+  if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, }))
+  missions = missions.body.missions[0].missionList.missions
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
+  if (user.body.hasRefreshed == null) {
     await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: false } }))
-    user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
+    user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
   }
   const elements = document.getElementsByClassName("mission-board");
   let categories = ["defense", "strength", "intelligence"]
@@ -170,11 +170,11 @@ async function updateMissions(beenClicked) {
     strength: "💪",
     intelligence: "🧠",
   };
-  if (!user.hasRefreshed) {
+  if (!user.body.hasRefreshed) {
     const missionBoard = document.querySelector(".mission-board");
     missionBoard.innerHTML = "";
     for (const mission of missions) {
-      if (user.completed.find(m => m.description == mission.description)) continue;
+      if (user.body.completed.find(m => m.description == mission.description)) continue;
       category = categories[Math.floor(Math.random() * categories.length)]
       if (missions.indexOf(mission) % 2 == 0) {
         const div = document.createElement("div");
