@@ -26,7 +26,7 @@ async function login() {
   }
   else {
     setCookie("userKey", data.key)
-    window.location.href("dashboard.html")
+    window.location.href = "dashboard.html"
   }
 }
 
@@ -62,7 +62,7 @@ async function signup() {
     alert(`Your secret key is '${sha256(randomKeys)}', please make sure that you copy this key for future login!'`)
     //add a user
     await superagent.post(BACKEND_URL + "/signup").send({ key: sha256(randomKeys), email: email, name: name, image: null, strength: 0, defense: 0, intelligence: 0, hasRefreshed: false, completed: [] }).body
-    window.location.href("index.html")
+    window.location.href = "index.html"
   } catch (e) {
     console.log(e)
     alert("An error occured! Please try again!")
@@ -113,7 +113,7 @@ async function logout() {
   doorSfx()
   if (confirm("Are you sure that you want to logout?")) {
     document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
-    window.location.href("index.html")
+    window.location.href = "index.html"
   }
 }
 
