@@ -125,7 +125,7 @@ async function getMissions() {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
 
 
-    const data = await superagent.get(BACKEND_URL + "/missionsupdate")
+    const data = await superagent.get(BACKEND_URL + "/missions")
     console.log(data.body)
     await console.log(`Before: ${data.body}`)
     let json = null
