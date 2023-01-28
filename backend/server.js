@@ -9,24 +9,8 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const cors = require('cors');
 const { error } = require('console');
-var winston = require('winston');
 const os = require('os');
 require('winston-syslog');
-const stringy = require('stringy')
-const papertrail = new winston.transports.Syslog({
-  host: 'logs2.papertrailapp.com',
-  port: 53939,
-  protocol: 'tls4',
-  localhost: os.hostname(),
-  eol: '\n',
-});
-
-const logger = winston.createLogger({
-  format: winston.format.simple(),
-  levels: winston.config.syslog.levels,
-  transports: [papertrail],
-});
-logger.info('INIT APP')
 
 function main () {
   MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).then(mongo => {
@@ -40,6 +24,7 @@ app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
+app.use(bodyParser.json())
 
 function sendMail(email, subject, message) {
   //send mail
@@ -57,14 +42,11 @@ function sendMail(email, subject, message) {
 app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
-app.post('/user', bodyParser.json(), (req, res) => {
-  logger.info("USER ENDPOINT PINGED")
+app.post('/user', (req, res) => {
   const users = mongo.db("userData").collection("users");
   users.findOne(req.body).then(user => {
     res.send(user);
   }).catch(err => {
-    console.error(err)
-    logger.error(err)
     res.send(err)
   })
 })
@@ -73,14 +55,12 @@ app.post('/users', async (req, res) => {
   res.json(await users.find().toArray());
 })
 app.post('/email', (req, res) => {
-    const data = JSON.parse(body);
-    res.end(sendMail(data));
+    res.end(sendMail(req.body));
 })
 app.post('/signup',async (req, res) => {
 const users = mongo.db("userData").collection("users");
-    const data = JSON.parse(body);
     try {
-      await users.insertOne(data)
+      await users.insertOne(req.body)
       res.end(0);
     } catch (e) {
       console.log(e)
@@ -89,14 +69,12 @@ const users = mongo.db("userData").collection("users");
 }) 
 app.post('/missions',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
-    const data = JSON.parse(req.body);
-    res.end(await missions.find(data));
+    res.end(await missions.find(req.body));
 })
 app.post('/missionsupdate',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
-  const data = JSON.parse(req.body);
   try {
-    await missions.insertOne(data)
+    await missions.insertOne(req.body)
     res.end(0);
   } catch (e) {
     console.log(e)
@@ -105,8 +83,7 @@ app.post('/missionsupdate',async (req, res) => {
 })
 app.post('/userupdate',async  (req, res) => {
 const users = mongo.db("userData").collection("users");
-    const data = JSON.parse(req.body);
-    await userCollection.updateOne(data)
+    await userCollection.updateOne(req.body)
     res.send(0)
 })
   
