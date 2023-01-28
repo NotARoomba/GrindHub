@@ -58,10 +58,9 @@ app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user', bodyParser.json(), (req, res) => {
-  logger.info("USER ENDPOINT PINGED: " +stringy.stringify(req.body))
+  logger.info("USER ENDPOINT PINGED")
   const users = mongo.db("userData").collection("users");
-  res.send(req)
-  users.findOne(req).then(user => {
+  users.findOne(req.body).then(user => {
     res.send(user);
   }).catch(err => {
     console.error(err)
