@@ -240,7 +240,7 @@ async function updateMissions(beenClicked) {
     const missionBoard = document.querySelector(".mission-board");
     missionBoard.innerHTML = "";
     for (const mission of missions) {
-      if (user.completed.find(m => m.description == mission.description)) continue;
+      if (user.body.completed.find(m => m.description == mission.description)) continue;
       category = categories[Math.floor(Math.random() * categories.length)]
       if (missions.indexOf(mission) % 2 != 0) {
         const div = document.createElement("div");
@@ -347,11 +347,11 @@ function findStatXpPerc(totalXP, next) {
 
 async function changeXPandRank() {
   var r = document.querySelector(':root');
-  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
-  let strength = findStatXpPerc(user.strength, 10)
-  let defense = findStatXpPerc(user.defense, 10)
-  let intelligence = findStatXpPerc(user.intelligence, 10)
-  let overall = findStatXpPerc((user.strength + user.defense + user.intelligence), 30)
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
+  let strength = findStatXpPerc(user.body.strength, 10)
+  let defense = findStatXpPerc(user.body.defense, 10)
+  let intelligence = findStatXpPerc(user.body.intelligence, 10)
+  let overall = findStatXpPerc((user.body.strength + user.body.defense + user.body.intelligence), 30)
   var strengthXP = strength[0] + "%";
   var defenseXP = defense[0] + "%";
   var intelligenceXP = intelligence[0] + "%";
