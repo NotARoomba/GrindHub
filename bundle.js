@@ -20,8 +20,7 @@ async function login() {
   input = document.getElementById("loginKey").value
   if (!input) return alert("Enter your private key!")
   console.log("LOGIN")
-   let data = await superagent.post(BACKEND_URL + "/user").send({ key: input })
-  console.log(data)
+   let data = await superagent.post(BACKEND_URL + "/user").send({ key: input }).body
   if (data == null) {
     return alert("The account attached to this key does not exist")
   }
@@ -36,7 +35,7 @@ async function signup() {
   if (!email || !(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email))) return alert("Enter a valid email!")
   try {
     while (true) {
-      let user = await superagent.post(BACKEND_URL + "/user").send({ email: email }).data.json()
+      let user = await superagent.post(BACKEND_URL + "/user").send({ email: email }).body
       if (!user) break;
       else if (email == user.email) alert("That email is taken!")
       else break;
@@ -53,7 +52,7 @@ async function signup() {
   try {
     while (true) {
       let name = prompt("What would you like your username to be?");
-      let user = await superagent.post(BACKEND_URL + "/user").send({ name: name }).data.json()
+      let user = await superagent.post(BACKEND_URL + "/user").send({ name: name }).body
       if (!user) break;
       else if (name == user.name) alert("That username is taken!")
       else break;
@@ -62,7 +61,7 @@ async function signup() {
     randomKeys = prompt("Enter some random letters and numbers for your key (sha256 hash).")
     alert(`Your secret key is '${sha256(randomKeys)}', please make sure that you copy this key for future login!'`)
     //add a user
-    await superagent.post(BACKEND_URL + "/signup").send({ key: sha256(randomKeys), email: email, name: name, image: null, strength: 0, defense: 0, intelligence: 0, hasRefreshed: false, completed: [] }).data.json()
+    await superagent.post(BACKEND_URL + "/signup").send({ key: sha256(randomKeys), email: email, name: name, image: null, strength: 0, defense: 0, intelligence: 0, hasRefreshed: false, completed: [] }).body
     window.location.href("index.html")
   } catch (e) {
     console.log(e)
@@ -71,7 +70,7 @@ async function signup() {
 }
 
 async function updateProfile() {
-  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
   document.getElementById('username').textContent = (user.name == null ? user.email : user.name)
   document.getElementById('userPfp').src = (user.image == null ? './img/default.jpeg' : user.image)
   await changeXPandRank()
@@ -81,9 +80,9 @@ async function updateProfile() {
 
 async function setName() {
   let name = prompt("What do you want to set your username to?")
-  let user = await superagent.post(BACKEND_URL + "/user").send({ name: name }).data.json()
+  let user = await superagent.post(BACKEND_URL + "/user").send({ name: name }).body
   if (user != null && name == user.name) return alert("That username is taken!")
-  await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { name: name } })).data.json()
+  await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { name: name } })).body
   await collection.updateOne()
   updateProfile()
 }
@@ -120,7 +119,7 @@ async function logout() {
 
 async function getMissions() {
   //get mission
-  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).data.json()
+  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).body
   //
   if (last.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
@@ -155,13 +154,13 @@ async function getMissions() {
 
 async function updateMissions(beenClicked) {
   if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }))
-  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).data.json()
-  if (missions.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).data.json()
+  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).body
+  if (missions.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, })).body
   missions = missions[0].missionList.missions
-  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
   if (user.hasRefreshed == null) {
     await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: false } }))
-    user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
+    user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
   }
   const elements = document.getElementsByClassName("mission-board");
   let categories = ["defense", "strength", "intelligence"]
@@ -348,7 +347,7 @@ function findStatXpPerc(totalXP, next) {
 
 async function changeXPandRank() {
   var r = document.querySelector(':root');
-  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).data.json()
+  let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') }).body
   let strength = findStatXpPerc(user.strength, 10)
   let defense = findStatXpPerc(user.defense, 10)
   let intelligence = findStatXpPerc(user.intelligence, 10)
