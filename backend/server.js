@@ -62,8 +62,7 @@ app.post('/user', (req, res) => {
   logger.info("USER ENDPOINT PINGED")
   const users = mongo.db("userData").collection("users");
   logger.info(JSON.stringify(req))
-  const data = JSON.parse(req);
-  users.findOne(data).then(user => {
+  users.findOne(req).then(user => {
     res.send(user);
   }).catch(err => {
     console.error(err)
