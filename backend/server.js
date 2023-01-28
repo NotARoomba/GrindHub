@@ -75,7 +75,7 @@ const users = mongo.db("userData").collection("users");
 }) 
 app.post('/missions',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
-    res.end(await missions.find(req.body).toArray());
+    res.send(await missions.find(req.body).toArray());
 })
 app.post('/missionsupdate',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
