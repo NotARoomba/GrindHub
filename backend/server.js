@@ -54,15 +54,13 @@ app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user', (req, res) => {
-  res.send({message: "HELLO"})
   const users = mongo.db("userData").collection("users");
   const data = JSON.parse(req.body);
   users.findOne(data).then(user => {
-    res.header("Access-Control-Allow-Origin", "*")
     res.json(user);
   }).catch(err => {
     console.error(err)
-    res.send("aaaaaa")
+    res.send(err)
   })
 })
 app.post('/users', async (req, res) => {
