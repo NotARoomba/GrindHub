@@ -22,11 +22,11 @@ async function login() {
   console.log("LOGIN")
    let data = await superagent.post(BACKEND_URL + "/user").send({ key: input })
    console.log(data)
-  if (data == null) {
+  if (data.body == null || data.text=="") {
     return alert("The account attached to this key does not exist")
   }
   else {
-    setCookie("userKey", data.key)
+    setCookie("userKey", data.body.key)
     window.location.href = "dashboard.html"
   }
 }
