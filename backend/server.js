@@ -11,10 +11,9 @@ const cors = require('cors');
 const { error } = require('console');
 
 
-async function main () {
-  const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).catch((err) => {
-    console.log(err)
-  })
+function main () {
+  MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).then(mongo => {
+
 const app = express()
 
 
@@ -110,7 +109,9 @@ app.listen(3001, (err) => {
   if (err) console.log("Error in server setup: " + err)
   console.log('Server listening on port 3001');
 })
-
+  }).catch((err) => {
+    console.log(err)
+})
 }
 
 main().then()
