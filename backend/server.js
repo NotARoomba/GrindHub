@@ -14,6 +14,12 @@ require('winston-syslog');
 
 function main () {
   MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).then(mongo => {
+  const { Configuration, OpenAIApi } = require("openai");
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI,
+});
+const openai = new OpenAIApi(configuration);
 
 const app = express()
 
@@ -86,6 +92,13 @@ const users = mongo.db("userData").collection("users");
     await userCollection.updateOne(req.body)
     res.send(0)
 })
+app.get("/missions"), async (req, res) => {
+  const completion = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: "write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade",
+  });
+  res.json(completion)
+}
   
 // start the server
 app.listen(3001, (err) => {

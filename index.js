@@ -123,21 +123,19 @@ async function getMissions() {
   //
   if (last.body.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
-    // let bot = new chatGPT("no");
-    //await bot.waitForReady()
-    let bot = new chatGPT('eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..wwBWtFYZ0a2rqT46.UjF5d9rx-UoJ_tyKesVwBlWTSSKXn-XQX-fmDmFqjyu6DrHqmME4Zui68U8VwGMzqPa-Juj02kpTXZAQe9VL_LzDpY_FyUZSLPupAPp8jJhDweo1I4W-m0kMrPbqCNXxKYHENh1D5c36jGJAyXdUILRsevFQy1yyQjG3Xmu7GPiUt71C6GFGzNXveqzhU6HTnyphdseVraQwWt-iE4PF2sImh5HO5DudCWHqgummKHnPgEvv6RMGYP811QF7WaZ73IQKdS-n1sgTHCL1x88wbRI4OY_xfj5aCK-F3T454Pz4C-JkJCYe_H5KNVFgMxigyFd-nhEA0It6XPoYnsvVz5BzxuG5hq00aYEwMcZyZBa3a-2TQcHQY2fiLTwFonKUvuuzU0TVwpqNS68QNbDqF4i9dX3NqokCtNl6x_ZQB06O_le_aF498GfvHz8mPabZ2yUuTTc6N84UXuq0X_ofaj88UblRJ0kH2Cv0WTobTEd8lBKRKEFcn7D_JMx86V5hFywZ8JUCeNA9SExe-l1KwebSYh456dWBM1vONiOxnaV2PiO2eQB2UkwJjKAGASTOilr2CttmwC0_no3UuBnb-palJdLxNcRB-dU9-w22MYReHj4S6dwMezpCB30JyDXpRR_QIDXvLnSCxth35-GgR5ee6n9cvX13sXTokMmF19_Bd1ORAHHv1BJydH8WSqas5cK66kYPPInl1tg7-tTxAaKprUY1vZ-VpbEilTA7wnK7QW2-C-UEY_SqchdzcwHkxrJC2cg3LbsgMNyr1ec_cFqrQ0voxmBnXKUVnS7n_JEVBrzYO0zAZ9WfBK64zeXP5aBXfS9qydEiyF46PLlVihH18qaPKHzJJ1QeQkkOBB8Xty1l_GygJuw8zhNbHtVMxa5PJNBp1yEhkSEk_gMXaYEIeKpZm2HG97hm3ZjAUdCd5S3U5TJaWWwPiyHpRdnUX3QesRIOuvHrZBWZ02WCFbSvonnvxSEJRIbD576zr-VQWL8DFyDwIJogkGmcPKclDorh3BsmHxXSR7mWGO009x8qrYZRBQCBw0u9BPqru2PlJjQ8IrOu3logz6UPOcuDc88t6E1xnIdWCVFL1dfzfxua-jnQ8_K2BhPAoF63M0Dm3P4PrE1hslwTl_9UAPAtWxQqqYwKn2UR1SAmdPOGCdJ0EOOJMS9ipHUrm_wFFqHizRMFWc6_ToaWsf9R4yAbT_zuQmE-6hRCcALn06DElp6GKTzM7yfidNhu0o3g7231HQlLXQ_G_hrV5wldiZ6-SDINTG79qf62kjqlLaOXtyHd_WdQcUwpefmPhe952YogGGlcTtH23vEAXPlsEX6yRa5HScjeePleNjeFDA0ysCUbLiute921RQdqnjqDI5H_Ko_07Z6Sd7j8XpUJnwzmElui_SyUZEMh8E-0pit1LPPWFjjrpj04vh5oFk7udQhIfo7-pePKzfNk88tbBMFPhxbbVg9xZ-yTMDkWxsjI0j5N38oT5yvb_TeMSuZYbb07QrivQPTADPm7PL9hkCZtiA4L21tbUgoeaMs81CFNtr4gUxysWcaTHifa3PxidA4uMREqD7czayoNykUhqKVzXv-E5qw166ExN8fORSF6nDMy_jD4mWIxRP4JskgBkKoEfmuSkkoRAkpNTzBr_wol3JpIkwgyQ8O5CFlnDnfuZRz7tYV4sr44zT2Jb7UjTDh_ycIyIjTFrsyebP4xPjLPLOswbXdzS9GboVsEBGIMSgiTchI7hlR38yQC9m6LIUgOcuUeUCM9aMUHaDvRJwDFFV39U_KjY4yM3whSZOzaWfLvQ6ara3OjFD9LtYKlTm84eWmEGAw86yFOVBmKZXzoWctB3GfCMT6krzldHXt7tdBEAN6xtr197uff0Z5esBDw4HLVdZ9_yOMblPAukKpTjolqiLmSEETdQsH8IfLmNN_CKBkzpev8icgGOJUrDFL_Vwft5I0cvFaKFgXwF6P5eMkmogsz4iP217sxnvMJKJKLmkQt0dxcyupFxmAFMKQbyuerUNvGNUKWQJKpkav6sxDTOBTL_4MkL98paBD0Lfn5-qBtyRnLNH9TJFavV7qEw-LBIl7ipIj6xMROuj3IJMIJLSXJD2unGwdfrY2W7dyrSZupOgADz-eSyYTdH1dNBp7uggOPwHWA6WYhQQQRLKJVVzP1_xbaEkz_w-s9dwb9jatnF1ryzWYhUcUQQ2u1K48HldlCIqtdju-0uAJhAoW57cHudHD-P0xYZKi16KRgUVsKPg.HoKqWtVthaEws_MZCbd4gQ');
-    await bot.waitForReady()
 
-    const data = await bot.ask("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade")
-    await console.log(`Before: ${data}`)
+
+    const data = await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
+    console.log(data.body)
+    await console.log(`Before: ${data.body}`)
     let json = null
     try {
-      json = JSON.parse(data)
+      json = JSON.parse(data.body)
       //console.log(`After: ${json}`)
       await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
     } catch (e) {
       try {
-        json = JSON.parse(data.split('```')[1])
+        json = JSON.parse(data.body.split('```')[1])
         console.log(`After: ${json}`)
         //set data
         await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
