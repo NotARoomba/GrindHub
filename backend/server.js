@@ -59,7 +59,7 @@ app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
 })
 app.post('/user', (req, res) => {
-  logger.info("USER ENDPOINT PINGED")
+  logger.info("USER ENDPOINT PINGED: " + req)
   const users = mongo.db("userData").collection("users");
   logger.info(JSON.stringify(req))
   users.findOne(req).then(user => {
