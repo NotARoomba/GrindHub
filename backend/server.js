@@ -5,13 +5,27 @@ const { MongoClient } = require('mongodb');
 var sha256 = require('js-sha256');
 const emailjs = require('@emailjs/browser')
 emailjs.init(process.env.EMAILJS)
+var winston = require('winston')
 const bodyParser = require('body-parser') 
 const express = require('express')
 const cors = require('cors');
 const { error } = require('console');
 const os = require('os');
 require('winston-syslog');
+const papertrail = new winston.transports.Syslog({
+  host: 'logs2.papertrailapp.com',
+  port: 53939,
+  protocol: 'tls4',
+  localhost: os.hostname(),
+  eol: '\n',
+});
 
+const logger = winston.createLogger({
+  format: winston.format.simple(),
+  levels: winston.config.syslog.levels,
+  transports: [papertrail],
+});
+logger.info('INIT APP')
 function main () {
   MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).then(mongo => {
   const { Configuration, OpenAIApi } = require("openai");
@@ -96,7 +110,7 @@ app.get("/getmissions", async (req, res) => {
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: "write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade",
-  });
+  }).catch(err => logger.info(err))
   res.json(completion)
 })
   
