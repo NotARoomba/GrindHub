@@ -12,6 +12,7 @@ const cors = require('cors');
 const { error } = require('console');
 const os = require('os');
 require('winston-syslog');
+const stringy  = require('stringy')
 const papertrail = new winston.transports.Syslog({
   host: 'logs2.papertrailapp.com',
   port: 53939,
@@ -111,7 +112,7 @@ app.get("/getmissions", async (req, res) => {
     model: "text-davinci-003",
     prompt: "write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade",
   }).catch(err => logger.info(err))
-  res.send(completion)
+  res.send(stringy.stringify(completion))
 })
   
 // start the server
