@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "npm i",
-    "start": "node server.js"
+    "start": "xvfb-run node server.js"
   },
   "dependencies": {
     "@emailjs/browser": "^3.10.0",
