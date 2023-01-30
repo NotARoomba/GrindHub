@@ -27,17 +27,16 @@ const logger = winston.createLogger({
   transports: [papertrail],
 });
 logger.info('INIT APP')
-function main () {
-  MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true }).then(mongo => {
-  const { Configuration, OpenAIApi } = require("openai");
-
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI,
-});
-const openai = new OpenAIApi(configuration);
-
+async function main () {
+  const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
 const app = express()
-
+const { ChatGPTAPIBrowser } = await import('chatgpt');
+const api = new ChatGPTAPIBrowser({
+  email: process.env.OPENAI_EMAIL,
+  password: process.env.OPENAI_PASSWORD,
+  isGoogleLogin: true
+})
+await api.initSession()
 
 const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz', 'http://grindhub.notaroomba.xyz'];
 
@@ -108,13 +107,9 @@ const users = mongo.db("userData").collection("users");
     res.send(0)
 })
 app.get("/getmissions", async (req, res) => {
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    max_tokens: 4000,
-    prompt: "write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade",
-  }).catch(err => logger.info(err))
-  logger.info(completion.data)
-  res.send(completion.data)
+  const result = await api.sendMessage("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade").catch(err => logger.info(err))
+  logger.info(result.response)
+  res.send(result.response)
 })
   
 // start the server
@@ -122,10 +117,6 @@ app.listen(3001, (err) => {
   if (err) console.log("Error in server setup: " + err)
   console.log('Server listening on port 3001');
 })
-  }).catch((err) => {
-    console.log(err)
-    logger.error(err)
-})
 }
 
-main()
+main().then()
