@@ -101,9 +101,11 @@ const users = mongo.db("userData").collection("users");
 })
 app.get("/getmissions", async (req, res) => {
   logger.info("GETTING MISSIONS")
-  let response = await bot.ask("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade. make the keys lowercase").then(res => logger.info(res)).catch(err => logger.info(err))
-  logger.info(response)
-  res.send(response)
+  bot.ask("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade. make the keys lowercase").then(res => {
+    logger.info(res)
+    res.send(res)
+  
+  }).catch(err => logger.info(err))
 })
   
 // start the server
