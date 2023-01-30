@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npm i",
+    "build": "npm i && cd node_modules/chatgpt && npm i && npm run build && cd ../../",
     "start": "node server.js"
   },
   "dependencies": {
