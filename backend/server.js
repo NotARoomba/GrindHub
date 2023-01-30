@@ -13,6 +13,7 @@ const { error } = require('console');
 const os = require('os');
 require('winston-syslog');
 const stringy  = require('stringy')
+const chromium = require('chromium');
 const papertrail = new winston.transports.Syslog({
   host: 'logs2.papertrailapp.com',
   port: 53939,
@@ -34,7 +35,8 @@ const { ChatGPTAPIBrowser } = await import('chatgpt');
 const api = new ChatGPTAPIBrowser({
   email: process.env.OPENAI_EMAIL,
   password: process.env.OPENAI_PASSWORD,
-  isGoogleLogin: true
+  isGoogleLogin: true,
+  executablePath: chromium.path
 })
 await api.initSession()
 
