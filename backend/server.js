@@ -1,47 +1,34 @@
-const url = require('url');
-const querystring = require('querystring');
-require('dotenv').config();
-const { MongoClient } = require('mongodb');
-var sha256 = require('js-sha256');
-const emailjs = require('@emailjs/browser')
-emailjs.init(process.env.EMAILJS)
-var winston = require('winston')
-const bodyParser = require('body-parser') 
-const express = require('express')
-const cors = require('cors');
-const { error } = require('console');
-const os = require('os');
-require('winston-syslog');
-const stringy  = require('stringy')
-const chromium = require('chromium');
-//var Xvfb = require('xvfb');
-//var xvfb = new Xvfb();
-const papertrail = new winston.transports.Syslog({
+import * as dotenv from 'dotenv'
+dotenv.config()
+import { MongoClient } from 'mongodb';
+import { init, send } from '@emailjs/browser';
+init(process.env.EMAILJS)
+import { transports as _transports, createLogger, format as _format, config } from 'winston';
+import bodyparser from 'body-parser'; 
+import express from 'express';
+import cors from 'cors';
+import { hostname } from 'os';
+import 'winston-syslog';
+import chatGPT from "chatgpt-io"; 
+const papertrail = new _transports.Syslog({
   host: 'logs2.papertrailapp.com',
   port: 53939,
   protocol: 'tls4',
-  localhost: os.hostname(),
+  localhost: hostname(),
   eol: '\n',
 });
 
-const logger = winston.createLogger({
-  format: winston.format.simple(),
-  levels: winston.config.syslog.levels,
+const logger = createLogger({
+  format: _format.simple(),
+  levels: config.syslog.levels,
   transports: [papertrail],
 });
-//xvfb.startSync();
 logger.info('INIT APP')
 async function main () {
   const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
 const app = express()
-const { ChatGPTAPIBrowser } = await import('chatgpt');
-const api = new ChatGPTAPIBrowser({
-  email: process.env.OPENAI_EMAIL,
-  password: process.env.OPENAI_PASSWORD,
-  isGoogleLogin: true,
-  executablePath: chromium.path
-})
-await api.initSession()
+let bot = new chatGPT(process.env.OPENAI_TOKEN);
+  await bot.waitForReady();
 
 const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz', 'http://grindhub.notaroomba.xyz'];
 
@@ -49,11 +36,11 @@ app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
-app.use(bodyParser.json())
+app.use(bodyparser.json())
 
 function sendMail(email, subject, message) {
   //send mail
-  emailjs.send('GrindHub', 'template_cpoi5e7', { email: email, subject: subject, message: message })
+  send('GrindHub', 'template_cpoi5e7', { email: email, subject: subject, message: message })
     .then(function(response) {
       console.log('SUCCESS!', response.status, response.text);
       return 0
@@ -112,9 +99,9 @@ const users = mongo.db("userData").collection("users");
     res.send(0)
 })
 app.get("/getmissions", async (req, res) => {
-  const result = await api.sendMessage("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade").catch(err => logger.info(err))
-  logger.info(result.response)
-  res.send(result.response)
+  let response = await bot.ask("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade");
+  logger.info(response)
+  res.send(response)
 })
   
 // start the server
