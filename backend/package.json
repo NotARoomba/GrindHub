@@ -1,12 +1,12 @@
 {
   "scripts": {
     "build": "npm i",
-    "start": "xvfb-run node server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@emailjs/browser": "^3.10.0",
     "body-parser": "^1.20.1",
-    "chatgpt": "^3.5.1",
+    "chatgpt": "github:NotARoomba/chatgpt-api-headless",
     "chromium": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

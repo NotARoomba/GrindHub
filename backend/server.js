@@ -14,8 +14,8 @@ const os = require('os');
 require('winston-syslog');
 const stringy  = require('stringy')
 const chromium = require('chromium');
-var Xvfb = require('xvfb');
-var xvfb = new Xvfb();
+//var Xvfb = require('xvfb');
+//var xvfb = new Xvfb();
 const papertrail = new winston.transports.Syslog({
   host: 'logs2.papertrailapp.com',
   port: 53939,
@@ -29,7 +29,7 @@ const logger = winston.createLogger({
   levels: winston.config.syslog.levels,
   transports: [papertrail],
 });
-xvfb.startSync();
+//xvfb.startSync();
 logger.info('INIT APP')
 async function main () {
   const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
