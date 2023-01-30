@@ -125,4 +125,3 @@ app.listen(3001, (err) => {
 }
 
 main().then()
-xvfb.stopSync();
