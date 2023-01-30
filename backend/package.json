@@ -22,7 +22,8 @@
     "stringy": "^0.1.0",
     "url": "^0.11.0",
     "winston": "^3.8.2",
-    "winston-syslog": "^2.7.0"
+    "winston-syslog": "^2.7.0",
+    "xvfb": "^0.4.0"
   },
   "engines": {
     "node": ">=18"
