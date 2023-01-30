@@ -313,7 +313,7 @@
 
 
     <script>
-      if (!getCookie("userKey")) {
+      if (getCookie("userKey") == null) {
         window.location = "index.html"
       }
 
