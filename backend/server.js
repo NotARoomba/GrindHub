@@ -9,7 +9,7 @@ import express from 'express';
 import cors from 'cors';
 import { hostname } from 'os';
 import 'winston-syslog';
-import chatGPT from "chatgpt-io"; 
+import { Configuration, OpenAIApi } from 'openai';
 const papertrail = new _transports.Syslog({
   host: 'logs2.papertrailapp.com',
   port: 53939,
@@ -28,9 +28,10 @@ async function main () {
   const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
 const app = express()
 
-let bot = new chatGPT(process.env.OPENAI_TOKEN);
-logger.info("CHATGPT INIT")
-await bot.waitForReady().then(() => logger.info("CHATGPT READY")).catch(err => logger.info(err))
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI,
+});
+const openai = new OpenAIApi(configuration);
 const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz', 'http://grindhub.notaroomba.xyz'];
 
 app.use(cors({
@@ -100,12 +101,13 @@ const users = mongo.db("userData").collection("users");
     res.send(0)
 })
 app.get("/getmissions", async (req, res) => {
-  logger.info("GETTING MISSIONS")
-  bot.ask("write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade. make the keys lowercase").then(res => {
-    logger.info(res)
-    res.send(res)
-  
-  }).catch(err => logger.info(err))
+  const completion = await openai.createCompletion({
+    model: "text-davinci-003",
+    max_tokens: 3700,
+    prompt: 'write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade. make the keys lowercase, an example of this would be ``` { missions: [{name: "Drink Water", description: "Drink some water for your health", category: "defense", upgrade: 12] ,...}``` make sure that the array of missions has 12 objects',
+  });
+  logger.info(completion.data)
+  res.send(completion.data.choices[0].text)
 })
   
 // start the server
