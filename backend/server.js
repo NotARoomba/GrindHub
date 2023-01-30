@@ -1,16 +1,15 @@
-import * as dotenv from 'dotenv'
-dotenv.config()
-import { MongoClient } from 'mongodb';
-import { init, send } from '@emailjs/browser';
+require('dotenv').config()
+const { MongoClient } = require('mongodb');
+const { init, send } = require('@emailjs/browser');
 init(process.env.EMAILJS)
-import { transports as _transports, createLogger, format as _format, config } from 'winston';
-import bodyparser from 'body-parser'; 
-import express from 'express';
-import cors from 'cors';
-import { hostname } from 'os';
-import 'winston-syslog';
-import { Configuration, OpenAIApi } from 'openai';
-const papertrail = new _transports.Syslog({
+const winston = require('winston');
+const bodyparser  = require('body-parser'); 
+const express  = require('express');
+const cors = require('cors');
+const { hostname }  = require('os');
+require('winston-syslog');
+const { Configuration, OpenAIApi }  = require('openai');
+const papertrail = new winston.transports.Syslog({
   host: 'logs2.papertrailapp.com',
   port: 53939,
   protocol: 'tls4',
@@ -18,9 +17,9 @@ const papertrail = new _transports.Syslog({
   eol: '\n',
 });
 
-const logger = createLogger({
-  format: _format.simple(),
-  levels: config.syslog.levels,
+const logger = winston.createLogger({
+  format: winston.format.simple(),
+  levels: winston.config.syslog.levels,
   transports: [papertrail],
 });
 logger.info('INIT APP')
