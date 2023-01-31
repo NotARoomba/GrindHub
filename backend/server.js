@@ -68,7 +68,7 @@ app.post('/user', (req, res) => {
     res.send(err)
   })
 })
-app.post('/users', async (req, res) => {
+app.get('/users', async (req, res) => {
   const users = mongo.db("userData").collection("users");
   res.json(await users.find().toArray());
 })

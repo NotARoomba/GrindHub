@@ -143,7 +143,7 @@ async function updateMissions(beenClicked) {
   if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }))
   let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400000) } }, { sort: { time: -1 }, }))
   console.log(missions)
-  if (missions.body.missions.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: (Date.now() - 86400000) } }, { sort: { time: -1 }, }))
+  if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: (Date.now() - 86400000) } }, { sort: { time: -1 }, }))
   console.log(missions)
   missions = missions.body.missions
   let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
