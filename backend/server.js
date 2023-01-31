@@ -55,9 +55,7 @@ function sendMail(email, subject, message) {
 
 app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
-})
-app.get('/health', async (req, res) => {
-  res.sendstatus(200)
+  res.end(200)
 })
 app.post('/user', (req, res) => {
   const users = mongo.db("userData").collection("users");
