@@ -119,21 +119,18 @@ async function logout() {
 async function getMissions() {
   //get mission
   let last = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
-  //
-  console.log(JSON.stringify(await superagent.post(BACKEND_URL + "/missions").send([{ time: { $gt: 1 } }, { sort: { time: -1 }, }])))
-  console.log("LAST: " + JSON.stringify(last))
-  if (last.body.length == 0 || (Date.now() - last.body[0].time) >= 86400 || last.text === "[]") {
+  if (last.body.length == 0 || (Date.now() - last.body[0].time) >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
-
-
     const data = await superagent.get(BACKEND_URL + "/getmissions")
     console.log("GETTING MISSIONS")
     if (data.text !== "") {
       await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: data.body, time: Date.now() })
     }
     const userCollection = await superagent.get(BACKEND_URL + "/users")
+    console.log(userCollection)
       for (let i in userCollection.body) {
         //set user data
+        console.log(i)
         await superagent.post(BACKEND_URL + "/userupdate").send([{ key: i.key }, { $set: { hasRefreshed: false } }])
       }
       await updateMissions(false)
@@ -143,10 +140,8 @@ async function getMissions() {
 async function updateMissions(beenClicked) {
   if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }])
   let missions = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
-  console.log(missions)
   if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $lt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
-  console.log(missions)
-  missions = missions.body.missions
+  missions = missions.body[0].missionList.missions
   let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
   if (user.body.hasRefreshed == null) {
     await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { hasRefreshed: false } }])

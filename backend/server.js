@@ -102,7 +102,7 @@ app.post('/missionsupdate',async (req, res) => {
 app.post('/userupdate',async  (req, res) => {
 const users = mongo.db("userData").collection("users");
     await users.updateOne(req.body[0], req.body[1])
-    res.send(0)
+    res.end(0)
 })
 app.get("/getmissions", async (req, res) => {
   const completion = await openai.createCompletion({
