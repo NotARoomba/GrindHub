@@ -126,8 +126,8 @@ async function getMissions() {
 
 
     const data = await superagent.get(BACKEND_URL + "/getmissions")
-    console.log(data)
-    await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: data, time: (Date.now() / 1000) })
+    console.log(data.body)
+    await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: data.body, time: (Date.now() / 1000) })
     const userCollection = await superagent.get(BACKEND_URL + "/users")
       for (let i in userCollection.body) {
         //set user data

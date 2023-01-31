@@ -113,13 +113,14 @@ app.get("/getmissions", async (req, res) => {
   if (completion.status >= 500) return res.end(completion.status);
   let json = null
   try {
+
     console.log(`Before: ${completion.data.choices[0].text.replace(/\r?\n|\r/g, '')}`)
     json = JSON.parse(completion.data.choices[0].text.replace(/\r?\n|\r/g, ''))
   } catch (e) {
     try {
       json = JSON.parse(completion.data.choices[0].text.replace(/\r?\n|\r/g, '').split('```')[1])
       console.log(`After: ${json}`)
-      } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions();}
+      } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`)}
     }
   logger.info(json)
   res.json(json)
