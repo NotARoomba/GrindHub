@@ -127,7 +127,7 @@ async function getMissions() {
 
 
     const data = await superagent.get(BACKEND_URL + "/getmissions")
-    console.log(data.body)
+    console.log(data)
     await console.log(`Before: ${data.body}`)
     let json = null
     try {
