@@ -127,26 +127,13 @@ async function getMissions() {
 
     const data = await superagent.get(BACKEND_URL + "/getmissions")
     console.log(data)
-    await console.log(`Before: ${data.body}`)
-    let json = null
-    try {
-      json = JSON.parse(data.body)
-      //console.log(`After: ${json}`)
-      await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
-    } catch (e) {
-      try {
-        json = JSON.parse(data.body.split('```')[1])
-        console.log(`After: ${json}`)
-        //set data
-        await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: json, time: (Date.now() / 1000) })
-      } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions() }
-      const userCollection = await superagent.get(BACKEND_URL + "/users")
+    await superagent.post(BACKEND_URL + "/missionsupdate").send({ missionList: data, time: (Date.now() / 1000) })
+    const userCollection = await superagent.get(BACKEND_URL + "/users")
       for (let i in userCollection.body) {
         //set user data
         await superagent.post(BACKEND_URL + "/userupdate").send(({ key: i.key }, { $set: { hasRefreshed: false } }))
       }
       await updateMissions(false)
-    }
   }
 }
 

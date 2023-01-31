@@ -38,6 +38,24 @@ function sendMail(email, subject, message) {
     });
   return 0
 }
+async function getMissions(openai) {
+  const completion = await openai.createCompletion({
+    model: "text-davinci-003",
+    max_tokens: 3500,
+    prompt: 'write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade. make the keys lowercase, an example of this would be ``` { "missions": [{"name": "Drink Water", "description": "Drink some water for your health", "category": "defense", "upgrade": 12] ,...}``` make sure that the array of missions has 12 objects and that the categories are in lowercase',
+  }).catch(err => logger.info(err))
+  let json = completion.data.choices[0].text.replace(/\r?\n|\r/g, '')
+  try {
+    console.log(`Before: ${json}`)
+    json = JSON.parse(json)
+  } catch (e) {
+    try {
+      json = JSON.parse(json.split('```')[1])
+      console.log(`After: ${json}`)
+      } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions();}
+    }
+    return json;
+}
 async function main () {
   logger.info('START MONGO')
   const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
@@ -105,13 +123,9 @@ const users = mongo.db("userData").collection("users");
     res.send(0)
 })
 app.get("/getmissions", async (req, res) => {
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    max_tokens: 3500,
-    prompt: 'write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade. make the keys lowercase, an example of this would be ``` { "missions": [{"name": "Drink Water", "description": "Drink some water for your health", "category": "defense", "upgrade": 12] ,...}``` make sure that the array of missions has 12 objects and that the categories are in lowercase',
-  }).catch(err => logger.info(err))
-  logger.info(JSON.parse(completion.data.choices[0].text.replace(/\r?\n|\r/g, '')))
-  res.json(JSON.parse(completion.data.choices[0].text.replace(/\r?\n|\r/g, '')))
+  let json = await getMissions(openai)
+  logger.info(json)
+  res.json(json)
 })
 logger.info("STARTING SERVER")
 // start the server
