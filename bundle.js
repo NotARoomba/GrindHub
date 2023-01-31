@@ -81,7 +81,7 @@ async function setName() {
   let name = prompt("What do you want to set your username to?")
   let user = await superagent.post(BACKEND_URL + "/user").send({ name: name })
   if (user.body != null && user.text!="" && name == user.body.name) return alert("That username is taken!")
-  await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { name: name } }))
+  await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { name: name } }])
   await collection.updateOne()
   updateProfile()
 }
@@ -99,7 +99,7 @@ async function setPfp() {
         await reader.addEventListener('load', async () => {
           const base64 = reader.result;
           //set user data
-          await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { image: base64 } }))
+          await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { image: base64 } }])
         });
 
         await reader.readAsDataURL(file);
@@ -118,9 +118,9 @@ async function logout() {
 
 async function getMissions() {
   //get mission
-  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }))
+  let last = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
   //
-  console.log(JSON.stringify(await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: 1 } }, { sort: { time: -1 }, }))))
+  console.log(JSON.stringify(await superagent.post(BACKEND_URL + "/missions").send([{ time: { $gt: 1 } }, { sort: { time: -1 }, }])))
   console.log("LAST: " + JSON.stringify(last))
   if (last.body.length == 0 || (Date.now() - last.body[0].time) >= 86400 || last.text === "[]") {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
@@ -134,22 +134,22 @@ async function getMissions() {
     const userCollection = await superagent.get(BACKEND_URL + "/users")
       for (let i in userCollection.body) {
         //set user data
-        await superagent.post(BACKEND_URL + "/userupdate").send(({ key: i.key }, { $set: { hasRefreshed: false } }))
+        await superagent.post(BACKEND_URL + "/userupdate").send([{ key: i.key }, { $set: { hasRefreshed: false } }])
       }
       await updateMissions(false)
   }
 }
 
 async function updateMissions(beenClicked) {
-  if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }))
-  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }))
+  if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }])
+  let missions = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
   console.log(missions)
-  if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: (Date.now() - 86400) } }, { sort: { time: -1 }, }))
+  if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $lt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
   console.log(missions)
   missions = missions.body.missions
   let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
   if (user.body.hasRefreshed == null) {
-    await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: false } }))
+    await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { hasRefreshed: false } }])
     user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
   }
   const elements = document.getElementsByClassName("mission-board");
@@ -389,7 +389,7 @@ async function missionComplete() {
       final = {}
       final[data[0].category] = data[0].upgrade
       final[data[1]] = Math.floor(data[0].upgrade / 2)
-      await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $inc: final, $push: { completed: data[0] } }))
+      await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $inc: final, $push: { completed: data[0] } }])
       await updateProfile()
     }
   }

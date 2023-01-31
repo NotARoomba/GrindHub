@@ -87,7 +87,7 @@ const users = mongo.db("userData").collection("users");
 }) 
 app.post('/missions',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
-    res.send(await missions.find(req.body).toArray());
+    res.send(await missions.find(req.body[0], req.body[1]).toArray());
 })
 app.post('/missionsupdate',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
@@ -101,7 +101,7 @@ app.post('/missionsupdate',async (req, res) => {
 })
 app.post('/userupdate',async  (req, res) => {
 const users = mongo.db("userData").collection("users");
-    await userCollection.updateOne(req.body)
+    await users.updateOne(req.body[0], req.body[1])
     res.send(0)
 })
 app.get("/getmissions", async (req, res) => {
