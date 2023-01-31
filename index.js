@@ -18,9 +18,7 @@ function getCookie(key) {
 async function login() {
   input = document.getElementById("loginKey").value
   if (!input) return alert("Enter your private key!")
-  console.log("LOGIN")
    let data = await superagent.post(BACKEND_URL + "/user").send({ key: input })
-   console.log(data)
   if (data.body == null || data.text=="") {
     return alert("The account attached to this key does not exist")
   }
@@ -122,7 +120,7 @@ async function getMissions() {
   let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, }))
   //
   console.log(last)
-  if (last.body.missions.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
+  if (last.body.length == 0 || (Date.now() / 1000) - last[0].time >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
 
 
