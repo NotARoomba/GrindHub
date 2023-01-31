@@ -24,21 +24,7 @@ const logger = winston.createLogger({
   transports: [papertrail],
 });
 logger.info('INIT APP')
-async function main () {
-  const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
-const app = express()
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI,
-});
-const openai = new OpenAIApi(configuration);
-const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz', 'http://grindhub.notaroomba.xyz'];
-
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
-app.use(bodyparser.json())
 
 function sendMail(email, subject, message) {
   //send mail
@@ -52,6 +38,23 @@ function sendMail(email, subject, message) {
     });
   return 0
 }
+async function main () {
+  logger.info('START MONGO')
+  const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
+  logger.info('END MONGO')
+  const app = express()
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI,
+});
+const openai = new OpenAIApi(configuration);
+const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz', 'http://grindhub.notaroomba.xyz'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+app.use(bodyparser.json())
 
 app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
