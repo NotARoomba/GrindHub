@@ -59,7 +59,6 @@ app.use(bodyparser.json())
 
 app.get('/', async (req, res) => {
   res.send("Hey you're not supposed to be here!")
-  res.end(200)
 })
 app.post('/user', (req, res) => {
   const users = mongo.db("userData").collection("users");
@@ -114,7 +113,7 @@ app.get("/getmissions", async (req, res) => {
   logger.info(JSON.parse(completion.data.choices[0].text.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t")))
   res.json(JSON.parse(completion.data.choices[0].text.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t")))
 })
-  
+logger.info("STARTING SERVER")
 // start the server
 app.listen(3001, (err) => {
   if (err) console.log("Error in server setup: " + err)
