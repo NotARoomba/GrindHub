@@ -43,11 +43,12 @@ async function main () {
   const mongo = await MongoClient.connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true })
   logger.info('END MONGO')
   const app = express()
-
+  logger.info('START OPENAI')
 const configuration = new Configuration({
   apiKey: process.env.OPENAI,
 });
 const openai = new OpenAIApi(configuration);
+logger.info('END OPENAI')
 const allowedOrigins = ['http://localhost:3000', 'https://grindhub.notaroomba.xyz', 'https://notaroomba.xyz', 'http://grindhub.notaroomba.xyz'];
 
 app.use(cors({
