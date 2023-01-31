@@ -44,6 +44,7 @@ async function getMissions(openai) {
     max_tokens: 3500,
     prompt: 'write this data into a json object: write 12 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 2 groups of 6 missions divided into 3 groups of 2, also write a stat for each of them upgrading their parent category by a random number under 20. Make a description for each of the missions then write all the values into a json object using only the values: name, description, category, upgrade. make the keys lowercase, an example of this would be ``` { "missions": [{"name": "Drink Water", "description": "Drink some water for your health", "category": "defense", "upgrade": 12] ,...}``` make sure that the array of missions has 12 objects and that the categories are in lowercase',
   }).catch(err => logger.info(err))
+  if (completion.status >= 500) return await getMissions();
   let json = completion.data.choices[0].text.replace(/\r?\n|\r/g, '')
   try {
     console.log(`Before: ${json}`)
