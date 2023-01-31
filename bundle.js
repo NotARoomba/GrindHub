@@ -145,7 +145,7 @@ async function updateMissions(beenClicked) {
   let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, }))
   if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: ((Date.now() / 1000) - 86400) } }, { sort: { time: -1 }, }))
   console.log(missions)
-  missions = missions.body.missions[0].missionList.missions
+  missions = missions.body
   let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
   if (user.body.hasRefreshed == null) {
     await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: false } }))
