@@ -120,6 +120,7 @@ async function getMissions() {
   //get mission
   let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }))
   //
+  console.log(JSON.stringify(await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: 1 } }, { sort: { time: -1 }, }))))
   console.log("LAST: " + JSON.stringify(last))
   if (last.body.length == 0 || (Date.now() - last.body[0].time) >= 86400 || last.text === "[]") {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
