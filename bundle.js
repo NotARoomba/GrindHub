@@ -118,10 +118,10 @@ async function logout() {
 
 async function getMissions() {
   //get mission
-  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400000) } }, { sort: { time: -1 }, }))
+  let last = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }))
   //
   console.log("LAST: " + last)
-  if (last.body.length == 0 || (Date.now() - last.body[0].time) >= 86400000) {
+  if (last.body.length == 0 || (Date.now() - last.body[0].time) >= 86400) {
     //in json format, write 6 missions about daily habits or wellbeing and categorize them into categories made up of defense, intelligence and strength. They should be in 3 groups of 2 divided equally, then write stats for each of them upgrading their parent category by a number under 20 and another category that is similar upgraded with a number that is under 10
 
 
@@ -141,9 +141,9 @@ async function getMissions() {
 
 async function updateMissions(beenClicked) {
   if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send(({ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }))
-  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400000) } }, { sort: { time: -1 }, }))
+  let missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }))
   console.log(missions)
-  if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: (Date.now() - 86400000) } }, { sort: { time: -1 }, }))
+  if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send(({ time: { $lt: (Date.now() - 86400) } }, { sort: { time: -1 }, }))
   console.log(missions)
   missions = missions.body.missions
   let user = await superagent.post(BACKEND_URL + "/user").send({ key: getCookie('userKey') })
