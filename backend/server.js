@@ -79,10 +79,10 @@ app.post('/signup',async (req, res) => {
 const users = mongo.db("userData").collection("users");
     try {
       await users.insertOne(req.body)
-      res.end(0);
+      res.sendStatus(200);
     } catch (e) {
       console.log(e)
-      res.end(1);
+      res.sendStatus(200);
     }
 }) 
 app.post('/missions',async (req, res) => {
@@ -93,16 +93,16 @@ app.post('/missionsupdate',async (req, res) => {
   const missions = mongo.db("userData").collection("missions");
   try {
     await missions.insertOne(req.body)
-    res.end(0);
+    res.sendStatus(200);
   } catch (e) {
     console.log(e)
-    res.end(1);
+    res.sendStatus(401);
   }
 })
 app.post('/userupdate',async  (req, res) => {
 const users = mongo.db("userData").collection("users");
     await users.updateOne(req.body[0], req.body[1])
-    res.end(0)
+    res.sendStatus(200)
 })
 app.get("/getmissions", async (req, res) => {
   const completion = await openai.createCompletion({
