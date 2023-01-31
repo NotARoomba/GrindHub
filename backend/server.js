@@ -112,7 +112,7 @@ app.get("/getmissions", async (req, res) => {
   }).catch(err => logger.info("BBBBBBBBBBB" + err))
   logger.info("AAAAAAAAAAAAAAAAAAAAa")
   logger.info(stringy.stringify(completion))
-  res.send(JSON.stringify(JSON.parse(completion)))
+  res.send({missions: completion.data.choices})
 })
   
 // start the server
