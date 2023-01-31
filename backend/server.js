@@ -109,7 +109,7 @@ app.get("/getmissions", async (req, res) => {
   logger.info("AAAAAAAAAAAAAAAAAAAAa")
   logger.info(stringy.stringify(completion))
   logger.info(stringy.stringify(completion.data))
-  res.send(JSON.parse(completion.data))
+  res.json(JSON.parse(completion.data))
 })
   
 // start the server
