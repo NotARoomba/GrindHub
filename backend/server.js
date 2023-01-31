@@ -52,9 +52,9 @@ async function getMissions(openai) {
     try {
       json = JSON.parse(json.split('```')[1])
       console.log(`After: ${json}`)
+      return json;
       } catch (e) { console.log(`Error occured abusing OpenAI: ${e}`); return await getMissions();}
     }
-    return json;
 }
 async function main () {
   logger.info('START MONGO')
