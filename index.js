@@ -135,7 +135,10 @@ async function getMissions() {
 }
 
 async function updateMissions(beenClicked) {
-  if (beenClicked) await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }])
+  if (beenClicked) { 
+    await superagent.post(BACKEND_URL + "/userupdate").send([{ key: getCookie('userKey') }, { $set: { hasRefreshed: true } }])
+    document.location.reload()
+  }
   let missions = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $gt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
   if (missions.body.length == 0) missions = await superagent.post(BACKEND_URL + "/missions").send([{ time: { $lt: (Date.now() - 86400) } }, { sort: { time: -1 }, }])
   missions = missions.body[0].missionList.missions
@@ -283,7 +286,6 @@ async function updateMissions(beenClicked) {
         }
       }
     }
-
   };
   const missionBoard = document.querySelector(".mission-board");
   if (missionBoard.innerHTML == "") {
